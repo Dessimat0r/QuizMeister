@@ -2,12 +2,19 @@ QuizMeister
 ===========
 
 **Contributors:** dessimat0r
+
 **Donate link:** https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KXNX6FPVJ7KGG
+
 **Tags:** quizzes, quiz, user, social, game, facebook, twitter, questions, answers
+
 **Requires at least:** 3.0.1
+
 **Tested up to:** 3.7.6
+
 **Stable tag:** trunk
+
 **License:** GPLv2 or later
+
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html
 
 QuizMeister allows users to author their own quiz posts with multiple answers per question, providing social sharing features and media embedding.
