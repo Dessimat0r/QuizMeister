@@ -37,7 +37,7 @@ class QM_Settings {
 				<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate" />
 				<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
 				</form>
-				Any donations are graciously recieved via the button to the left and go to the author, who has poured lot of work into development of this plugin and needs to stay alive ;) Thanks in advance :) Bitcoin: 1JrHT9F96GjHYHHNFmBN2oRt79DDk5kzHq.
+				Any donations are graciously recieved via the PayPal button to the left and go to the author, who has poured a lot of work into the development of this plugin and needs to stay alive ;) Thanks in advance :)<br />Bitcoin: 1JrHT9F96GjHYHHNFmBN2oRt79DDk5kzHq.
 			</div>
 			<?=settings_errors();?>
 			<div class="clear"></div>
