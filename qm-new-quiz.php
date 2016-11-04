@@ -254,7 +254,7 @@ class QM_New_Quiz {
 												<label class="qm-q-a-text-lab" for="<?=$this->getLabelUnqIDs();?>" title="The answer text.">
 													Answer #<span class="qm-alab"><?=$j+1; ?></span> Text <span class="qm-req-indicator">*</span>
 												</label>
-												<input class="qm-q-a-formel main-input required-field" type="text" id="<?=$this->getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" maxlength="<?=strval(self::$q_a_text_maxtextlen);?>" alue="<?=isset($_POST[$basea.'-text']) ? $_POST[$basea.'-text'] : ''; ?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base; ?>-rightans" value="<?=strval($j); ?>"<?php if (isset($_POST[$base.'-rightans']) && $j === intval($_POST[$base.'-rightans'])) echo ' checked'; ?>>
+												<input class="qm-q-a-formel main-input required-field" type="text" id="<?=$this->getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" maxlength="<?=strval(self::$q_a_text_maxtextlen);?>" value="<?=isset($_POST[$basea.'-text']) ? $_POST[$basea.'-text'] : ''; ?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base; ?>-rightans" value="<?=strval($j); ?>"<?php if (isset($_POST[$base.'-rightans']) && $j === intval($_POST[$base.'-rightans'])) echo ' checked'; ?>>
 											</li><?php
 										}
 									?></ul>
