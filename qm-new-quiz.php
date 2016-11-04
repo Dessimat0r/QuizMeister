@@ -223,28 +223,28 @@ class QM_New_Quiz {
 										<label for="<?=$this->getLabelUnqIDs();?>" title="The main text for this question.">
 											Text <span class="qm-req-indicator">*</span>
 										</label>
-										<input id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?=$base;?>-text" minlength="2" value="<?=isset($_POST[$base.'-text']) ? $_POST[$base.'-text'] : ''; ?>">
+										<input id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?=$base;?>-text" maxlength="<?=strval(self::$q_text_maxtextlen);?>" value="<?=isset($_POST[$base.'-text']) ? $_POST[$base.'-text'] : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-sub-li">
 										<label for="<?=$this->getLabelUnqIDs();?>" title="The sub-text for this question that goes under the main text.">
 											Sub-Text
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?=$base; ?>-sub" minlength="2" value="<?=isset($_POST[$base.'-sub']) ? $_POST[$base.'-sub'] : ''; ?>">
+										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?=$base; ?>-sub" maxlength="<?=strval(self::$q_sub_maxtextlen);?>" value="<?=isset($_POST[$base.'-sub']) ? $_POST[$base.'-sub'] : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-explan-li">
 										<label for="<?=$this->getLabelUnqIDs();?>" title="The explanation for the correct answer, displayed on the following page.">
 											Explanation
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?=$base; ?>-explan" minlength="2" value="<?=isset($_POST[$base.'-explan']) ? $_POST[$base.'-explan'] : ''; ?>">
+										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?=$base; ?>-explan" maxlength="<?=strval(self::$q_explan_maxtextlen);?>" value="<?=isset($_POST[$base.'-explan']) ? $_POST[$base.'-explan'] : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-embed-li">
 										<label for="<?=$this->getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
 											Embed
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" minlength="2" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
+										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" maxlength="<?=strval(self::$q_explan_maxtextlen);?>" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
 										<div class="clear"></div>
 									</li><?php
 									?><li class="qm-q-a-li"><h3 class="qm-q-a-head">Answers</h3><div class="qm-q-a-ul-wrap"><ul class="qm-q-a-ul"><?php
@@ -254,7 +254,7 @@ class QM_New_Quiz {
 												<label class="qm-q-a-text-lab" for="<?=$this->getLabelUnqIDs();?>" title="The answer text.">
 													Answer #<span class="qm-alab"><?=$j+1; ?></span> Text <span class="qm-req-indicator">*</span>
 												</label>
-												<input class="qm-q-a-formel main-input required-field" type="text" id="<?=$this->getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" minlength="2" value="<?=isset($_POST[$basea.'-text']) ? $_POST[$basea.'-text'] : ''; ?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base; ?>-rightans" value="<?=strval($j); ?>"<?php if (isset($_POST[$base.'-rightans']) && $j === intval($_POST[$base.'-rightans'])) echo ' checked'; ?>>
+												<input class="qm-q-a-formel main-input required-field" type="text" id="<?=$this->getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" maxlength="<?=strval(self::$q_a_text_maxtextlen);?>" alue="<?=isset($_POST[$basea.'-text']) ? $_POST[$basea.'-text'] : ''; ?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base; ?>-rightans" value="<?=strval($j); ?>"<?php if (isset($_POST[$base.'-rightans']) && $j === intval($_POST[$base.'-rightans'])) echo ' checked'; ?>>
 											</li><?php
 										}
 									?></ul>
