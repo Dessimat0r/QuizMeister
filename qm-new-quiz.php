@@ -244,7 +244,7 @@ class QM_New_Quiz {
 										<label for="<?=$this->getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
 											Embed
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" maxlength="<?=strval(self::$q_explan_maxtextlen);?>" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
+										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" maxlength="<?=strval(self::$q_embed_maxtextlen);?>" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
 										<div class="clear"></div>
 									</li><?php
 									?><li class="qm-q-a-li"><h3 class="qm-q-a-head">Answers</h3><div class="qm-q-a-ul-wrap"><ul class="qm-q-a-ul"><?php
