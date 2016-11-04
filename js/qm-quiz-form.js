@@ -9,6 +9,11 @@ var minapq = parseInt(qfdata.minapq, 10);
 var maxapq = parseInt(qfdata.maxapq, 10);
 var f_numq = parseInt(qfdata.f_numq, 10);
 var f_numapq = parseInt(qfdata.f_numapq, 10);
+var q_text_maxtextlen = parseInt(qfdata.q_text_maxtextlen, 10); // max question text length, int
+var q_sub_maxtextlen  = parseInt(qfdata.q_sub_maxtextlen, 10); // max question sub-text length, int
+var q_explan_maxtextlen  = parseInt(qfdata.q_explan_maxtextlen, 10); // max question explan length, int
+var q_embed_maxtextlen  = parseInt(qfdata.q_embed_maxtextlen, 10); // max question embed length, int
+var q_a_text_maxtextlen = parseInt(qfdata.q_a_text_maxtextlen, 10); // max answer text length, int
 
 jQuery(document).ready(function ($) {
 	var npform = $('#qm-new-quiz-form');
@@ -218,32 +223,40 @@ function confirmOnPageExit (e) {
 
 function checkFormSubmit (e = null) {
 	var $ = jQuery;
+	var nqf = $('#qm-new-quiz-form');
 	if (e != null && e.originalEvent.explicitOriginalTarget.id == 'qm-submit') {
 		window.onbeforeunload = null;
 	}
-	$('#qm-new-quiz-form input').each(function () {
+	nqf.find('input').each(function () {
 		if ($(this).hasClass('invalid')) {
 			$(this).removeClass('invalid');
 		}
 	});
 	var hasError = false;
-	$('#qm-new-quiz-form input').each(function () {
-		var element = $(this),
-			val = element.val();
-
+	nqf.find('input').each(function () {
+		var element = $(this);
 		if (element.hasClass('required-field')) {
-			if (element.hasClass('richtext')) {
-				val = $.trim(tinyMCE.get(
-					element.id()).getContent());
-			}
-			if ((val = $.trim(val)) === '') {
-				element.addClass('invalid');
-				hasError = true;
-			}
-			if (element.hasClass('cat')) {
-				if (isNaN(val) || val <= 0) {
+			if (element.prop('type') === 'radio') {
+				// all radio buttons of same name invalid if none of them are checked
+				var checked = nqf.find('input[name="'+element.prop('name')+'"]:checked:first');
+				if (checked.length === 0) {
 					element.addClass('invalid');
 					hasError = true;
+			} else {
+				val = element.val();
+				if (element.hasClass('richtext')) {
+					val = $.trim(tinyMCE.get(
+						element.id()).getContent());
+				}
+				if ((val = $.trim(val)) === '') {
+					element.addClass('invalid');
+					hasError = true;
+				}
+				if (element.hasClass('cat')) {
+					if (isNaN(val) || val <= 0) {
+						element.addClass('invalid');
+						hasError = true;
+					}
 				}
 			}
 		}
@@ -292,6 +305,7 @@ function addAnswer (qli) {
 	if (npform.find('[data-deleting="true"]').length > 0 || npform.find(':animated').not('[class$="-rollupdown"]').length > 0) {
 		return;
 	}
+	var res = false;
 	var currqid = qli.data('qnum');
 	var numae = qli.find('> .qm-q-numa:first');
 	var numa = parseInt(numae.val(),10);
@@ -301,9 +315,10 @@ function addAnswer (qli) {
 	addADelBtns(li);
 	addExplanOnLi(li);
 	li.insertAfter(last).hide().slideDown('slow');
-	numae.val(++numa);
+	numae.val(res = ++numa);
 	checkBtnEnablement(npform);
 	checkFormSubmit(null);
+	return res;
 }
 
 // qli is the li of the question to be deleted
@@ -437,25 +452,25 @@ function get_question_li (q_index, num_answers) {
 	html += '<input name="'+baseq+'-numa" type="hidden" class="qm-q-numa qm-q-formel main-input" data-fname="numa" value="'+num_answers+'">';
 	var textli = '<li class="qm-q-text-li">'+
 		'<label for="'+getLabelUnqIDs()+'" title="The main text for this question.">Text <span class="qm-req-indicator">*</span></label>'+
-		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-text" class="required-field qm-q-formel main-input" data-fname="text" type="text" minlength="2">'+
+		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-text" class="required-field qm-q-formel main-input" data-fname="text" type="text" maxlength="'+q_text_maxtextlen+'">'+
 		'<div id="clear"></div>'+
 	'</li>';
 	html += textli;
 	var subtextli = '<li class="qm-q-sub-li">'+
 		'<label for="'+getLabelUnqIDs()+'" title="The sub-text for this question that goes under the main text.">Sub-Text</label>'+
-		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-sub" class="qm-q-formel main-input" data-fname="sub" type="text" minlength="2">'+
+		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-sub" class="qm-q-formel main-input" data-fname="sub" type="text" maxlength="'+q_sub_maxtextlen+'">'+
 		'<div id="clear"></div>'+
 	'</li>';
 	html += subtextli;
 	var explanli = '<li class="qm-q-sub-li">'+
 		'<label for="'+getLabelUnqIDs()+'" title="The explanation for the correct answer, displayed on the following page.">Explanation</label>'+
-		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-explan" class="qm-q-formel main-input" data-fname="explan" type="text" minlength="2">'+
+		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-explan" class="qm-q-formel main-input" data-fname="explan" type="text" maxlength="'+q_explan_maxtextlen+'">'+
 		'<div id="clear"></div>'+
 	'</li>';
 	html += explanli;
 	var embedli = '<li class="qm-q-embed-li">'+
 		'<label for="'+getLabelUnqIDs()+'" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">Embed</label>'+
-		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-embed" class="qm-q-formel main-input" data-fname="embed" type="text" minlength="2" placeholder="YouTube, Imgur, Vimeo URL, etc.">'+
+		'<input id="'+getLabelUnqIDs()+'" name="'+baseq+'-embed" class="qm-q-formel main-input" data-fname="embed" type="text" maxlength="'+q_embed_maxtextlen+'" placeholder="YouTube, Imgur, Vimeo URL, etc.">'+
 		'<div id="clear"></div>'+
 	'</li>';
 	html += embedli;
@@ -480,7 +495,7 @@ function get_ans_li (q_index, a_index, is_corr_ans) {
 	var basea = baseq + '-a-' + a_index;
 	var ntext = '<li class="qm-q-a-text-li" data-anum="'+a_index+'">' +
 		'<label for="'+getLabelUnqIDs()+'" title="The answer text.">Answer #<span class="qm-alab">' + (a_index + 1) + '</span> Text <span class="qm-req-indicator">*</span></label>' +
-		'<input id="'+getLabelUnqIDs()+'" name="' + basea + '-text" class="required-field qm-q-a-formel main-input" data-fname="text" type="text" minlength="2">&nbsp;' +
+		'<input id="'+getLabelUnqIDs()+'" name="' + basea + '-text" class="required-field qm-q-a-formel main-input" data-fname="text" type="text" maxlength="'+q_a_text_maxtextlen+'">&nbsp;' +
 		'<input type="radio" class="required-field qm-q-formel qm-q-rightans" name="' + baseq + '-rightans" data-fname="rightans" class="qm-q-rightans" value="' + a_index + '"' + (is_corr_ans ? ' checked' : '') + '>' +
 		'<div id="clear"></div>' +
 	'</li>';
