@@ -32,6 +32,15 @@ class QM_Main {
 		if (get_option('qm_use_theme_quiz_template', 'no') === 'no') {
 			add_filter('single_template', array($this, 'change_post_type_template'));
 		}
+		add_filter('wp_link_query_args', array($this, 'mod_wp_link_query_args'));
+	}
+
+	// filter function to remove quizzes from all editor ui link functionality
+	// (insert/edit link)
+	function mod_wp_link_query_args($query) {
+		$key = array_search('quiz', $query['post_type']);
+		if ($key !== false) unset($query['post_type'][$key]);
+		return $query;
 	}
 
 	function change_post_type_template($single_template) {

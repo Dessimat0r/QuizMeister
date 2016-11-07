@@ -99,7 +99,7 @@ function addRollupOnQHead (qhead) {
 				a.text($(this).is(':visible') ? 'roll up' : 'roll down');
 			});
 			return false;
-		});
+		}).click();
 		qhead_this.append(rollup);
 	});
 	return qhead;
@@ -242,6 +242,7 @@ function checkFormSubmit (e = null) {
 				if (checked.length === 0) {
 					element.addClass('invalid');
 					hasError = true;
+				}
 			} else {
 				val = element.val();
 				if (element.hasClass('richtext')) {
@@ -267,6 +268,7 @@ function checkFormSubmit (e = null) {
 			}
 		}
 	});
+	/*
 	if (hasError) {
 		if (e != null) {
 			e.preventDefault();
@@ -275,6 +277,7 @@ function checkFormSubmit (e = null) {
 		return false;
 	}
 	$('#qm-submit').prop('disabled', false).removeClass('disabled');
+	*/
 	return true;
 }
 

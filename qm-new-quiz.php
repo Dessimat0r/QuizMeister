@@ -16,6 +16,74 @@ class QM_New_Quiz {
 	public static $q_embed_maxtextlen  = 200; // max question embed length, int
 	public static $q_a_text_maxtextlen = 50; // max answer text length, int
 
+	public static $allowed_desc_tags = array (
+		'address' => array ( 'title' => true, ),
+		'a' => array ( 'href' => true, 'rel' => true, 'rev' => true, 'name' => true, 'target' => true, 'title' => true, ),
+		'abbr' => array ( 'title' => true, ),
+		'acronym' => array ( 'title' => true, ),
+		'b' => array ( 'title' => true, ),
+		'bdo' => array ( 'dir' => true, 'title' => true, ),
+		'big' => array ( 'title' => true, ),
+		'blockquote' => array ( 'cite' => true, 'title' => true, ),
+		'br' => array ( 'title' => true, ),
+		'cite' => array ( 'dir' => true, 'title' => true, ),
+		'code' => array ( 'title' => true, ),
+		'col' => array ( 'align' => true, 'char' => true, 'charoff' => true, 'span' => true, 'dir' => true, 'valign' => true, 'width' => true, 'title' => true, ),
+		'colgroup' => array ( 'align' => true, 'char' => true, 'charoff' => true, 'span' => true, 'valign' => true, 'width' => true, 'title' => true, ),
+		'del' => array ( 'datetime' => true, 'title' => true, ),
+		'dd' => array ( 'title' => true, ),
+		'dfn' => array ( 'title' => true, ),
+		'details' => array ( 'align' => true, 'dir' => true, 'open' => true, 'title' => true, ),
+		'div' => array ( 'align' => true, 'dir' => true, 'title' => true, ),
+		'dl' => array ( 'title' => true, ),
+		'dt' => array ( 'title' => true, ),
+		'em' => array ( 'title' => true, ),
+		'h1' => array ( 'align' => true, 'title' => true, ),
+		'h2' => array ( 'align' => true, 'title' => true, ),
+		'h3' => array ( 'align' => true, 'title' => true, ),
+		'h4' => array ( 'align' => true, 'title' => true, ),
+		'h5' => array ( 'align' => true, 'title' => true, ),
+		'h6' => array ( 'align' => true, 'title' => true, ),
+		'header' => array ( 'align' => true, 'dir' => true, 'title' => true, ),
+		'hgroup' => array ( 'align' => true, 'dir' => true, 'title' => true, ),
+		'hr' => array ( 'align' => true, 'noshade' => true, 'size' => true, 'width' => true, 'title' => true, ),
+		'i' => array ( 'title' => true, ),
+		'ins' => array ( 'datetime' => true, 'cite' => true, 'title' => true, ),
+		'kbd' => array ( 'title' => true, ),
+		'label' => array ( 'for' => true, 'title' => true, ),
+		'legend' => array ( 'align' => true, 'title' => true, ),
+		'li' => array ( 'align' => true, 'value' => true, 'title' => true, ),
+		'mark' => array ( 'title' => true, ),
+		'p' => array ( 'align' => true, 'dir' => true, 'title' => true, ),
+		'pre' => array ( 'width' => true, 'title' => true, ),
+		'q' => array ( 'cite' => true, 'title' => true, ),
+		's' => array ( 'title' => true, ),
+		'samp' => array ( 'title' => true, ),
+		'span' => array ( 'dir' => true, 'align' => true, 'title' => true, ),
+		'section' => array ( 'align' => true, 'dir' => true, 'title' => true, ),
+		'small' => array ( 'title' => true, ),
+		'strike' => array ( 'title' => true, ),
+		'strong' => array ( 'title' => true, ),
+		'sub' => array ( 'title' => true, ),
+		'summary' => array ( 'align' => true, 'dir' => true, 'title' => true, ),
+		'sup' => array ( 'title' => true, ),
+		'table' => array ( 'align' => true, 'bgcolor' => true, 'border' => true, 'cellpadding' => true, 'cellspacing' => true, 'dir' => true, 'rules' => true, 'summary' => true, 'width' => true, 'title' => true, ),
+		'tbody' => array ( 'align' => true, 'char' => true, 'charoff' => true, 'valign' => true, 'title' => true, ),
+		'td' => array ( 'abbr' => true, 'align' => true, 'axis' => true, 'bgcolor' => true, 'char' => true, 'charoff' => true, 'colspan' => true, 'dir' => true, 'headers' => true, 'height' => true, 'rowspan' => true, 'scope' => true, 'valign' => true, 'width' => true, 'title' => true, ),
+		'tfoot' => array ( 'align' => true, 'char' => true, 'charoff' => true, 'valign' => true, 'title' => true, ),
+		'th' => array ( 'abbr' => true, 'align' => true, 'axis' => true, 'bgcolor' => true, 'char' => true, 'charoff' => true, 'colspan' => true, 'headers' => true, 'height' => true, 'rowspan' => true, 'scope' => true, 'valign' => true, 'width' => true, 'title' => true, ),
+		'thead' => array ( 'align' => true, 'char' => true, 'charoff' => true, 'valign' => true, 'title' => true, ),
+		'title' => array ( 'title' => true, ),
+		'tr' => array ( 'align' => true, 'bgcolor' => true, 'char' => true, 'charoff' => true, 'valign' => true, 'title' => true, ),
+		'track' => array ( 'default' => true, 'kind' => true, 'label' => true, 'src' => true, 'srclang' => true, 'title' => true, ),
+		'tt' => array ( 'title' => true, ),
+		'u' => array ( 'title' => true, ),
+		'ul' => array ( 'type' => true, 'title' => true, ),
+		'ol' => array ( 'start' => true, 'type' => true, 'reversed' => true, 'title' => true, ),
+		'var' => array ( 'title' => true, ),
+		'img' => array ( 'alt' => true, 'align' => true, 'border' => true, 'height' => true, 'hspace' => true, 'longdesc' => true, 'vspace' => true, 'src' => true, 'width' => true, 'title' => true, )
+	);
+
 	// fields
 	public $num_q = 4;     // initial no of questions / current no of questions, int
 	public $num_a_pq = 4;  // initial answers per question, int
@@ -72,15 +140,15 @@ class QM_New_Quiz {
 		remove_action( 'media_buttons', 'media_buttons' );
 	}
 
-	private $lastunq = null;
-	private function getLabelUnqIDs() {
+	static private $lastunq = null;
+	static public function getLabelUnqIDs() {
 		$ret = null;
-		if (!$this->lastunq) {
-			$this->lastunq = uniqid();
-			$ret = $this->lastunq;
+		if (!self::$lastunq) {
+			self::$lastunq = uniqid();
+			$ret = self::$lastunq;
 		} else {
-			$ret = $this->lastunq;
-			$this->lastunq = null;
+			$ret = self::$lastunq;
+			self::$lastunq = null;
 		}
 		return $ret;
 	}
@@ -208,60 +276,91 @@ class QM_New_Quiz {
 					do_action( 'qm_new_quiz_form_tags');
 					*/
 
+					function outputAns($base, $aindex, $answer = null, $forcerightans = false) {
+						$basea  = $base . '-a-' . $aindex;
+						?><li class="qm-q-a-text-li" data-anum="<?=strval($aindex);?>">
+							<label class="qm-q-a-text-lab" for="<?=QM_New_Quiz::getLabelUnqIDs();?>" title="The answer text.">
+								Answer #<span class="qm-alab"><?=$aindex+1; ?></span> Text <span class="qm-req-indicator">*</span>
+							</label>
+							<input class="qm-q-a-formel main-input required-field" type="text" id="<?=QM_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" maxlength="<?=strval(QM_New_Quiz::$q_a_text_maxtextlen);?>" value="<?=isset($answer) ? $answer['text'] : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base;?>-rightans" value="<?=strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
+						</li><?php
+					}
+
 					// add quiz fields
 					for ($i = 0; $i < $this->num_q; $i++) {
 						//class should be qm-q-text
-						$base = 'qm-q-' . $i;
-						$numa = isset($_POST[$base.'-numa']) ? intval($_POST[$base.'-numa']) : $this->num_a_pq;
+						$base  = 'qm-q-' . $i;
+						$numa  = isset($_POST[$base.'-numa']) ? intval($_POST[$base.'-numa']) : $this->num_a_pq;
+						$anuma = $numa;
 						?>
 						<li class="qm-q-li" data-qnum="<?=$i;?>">
-							<input type="hidden" class="qm-q-numa qm-q-formel" data-fname="numa" name="<?=$base; ?>-numa" value="<?=strval($numa); ?>">
 							<h2 class="qm-q-head">Question #<span class="qm-qlab"><?=$i+1;?></span></h2>
 							<div class="qm-q-ul-wrap">
 								<ul class="qm-q-ul">
 									<li class="qm-q-text-li">
-										<label for="<?=$this->getLabelUnqIDs();?>" title="The main text for this question.">
+										<label for="<?=self::getLabelUnqIDs();?>" title="The main text for this question.">
 											Text <span class="qm-req-indicator">*</span>
 										</label>
-										<input id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?=$base;?>-text" maxlength="<?=strval(self::$q_text_maxtextlen);?>" value="<?=isset($_POST[$base.'-text']) ? $_POST[$base.'-text'] : ''; ?>">
+										<input id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?=$base;?>-text" maxlength="<?=strval(self::$q_text_maxtextlen);?>" value="<?=isset($_POST[$base.'-text']) ? $_POST[$base.'-text'] : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-sub-li">
-										<label for="<?=$this->getLabelUnqIDs();?>" title="The sub-text for this question that goes under the main text.">
+										<label for="<?=self::getLabelUnqIDs();?>" title="The sub-text for this question that goes under the main text.">
 											Sub-Text
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?=$base; ?>-sub" maxlength="<?=strval(self::$q_sub_maxtextlen);?>" value="<?=isset($_POST[$base.'-sub']) ? $_POST[$base.'-sub'] : ''; ?>">
+										<input type="text" id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?=$base; ?>-sub" maxlength="<?=strval(self::$q_sub_maxtextlen);?>" value="<?=isset($_POST[$base.'-sub']) ? $_POST[$base.'-sub'] : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-explan-li">
-										<label for="<?=$this->getLabelUnqIDs();?>" title="The explanation for the correct answer, displayed on the following page.">
+										<label for="<?=self::getLabelUnqIDs();?>" title="The explanation for the correct answer, displayed on the following page.">
 											Explanation
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?=$base; ?>-explan" maxlength="<?=strval(self::$q_explan_maxtextlen);?>" value="<?=isset($_POST[$base.'-explan']) ? $_POST[$base.'-explan'] : ''; ?>">
+										<input type="text" id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?=$base; ?>-explan" maxlength="<?=strval(self::$q_explan_maxtextlen);?>" value="<?=isset($_POST[$base.'-explan']) ? $_POST[$base.'-explan'] : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-embed-li">
-										<label for="<?=$this->getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
+										<label for="<?=self::getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
 											Embed
 										</label>
-										<input type="text" id="<?=$this->getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" maxlength="<?=strval(self::$q_embed_maxtextlen);?>" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
+										<input type="text" id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" maxlength="<?=strval(self::$q_embed_maxtextlen);?>" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
 										<div class="clear"></div>
 									</li><?php
 									?><li class="qm-q-a-li"><h3 class="qm-q-a-head">Answers</h3><div class="qm-q-a-ul-wrap"><ul class="qm-q-a-ul"><?php
-										for ($j = 0; $j < $numa; $j++) {
-											$basea = $base . '-a-' . $j;
-											?><li class="qm-q-a-text-li" data-anum="<?=$j;?>">
-												<label class="qm-q-a-text-lab" for="<?=$this->getLabelUnqIDs();?>" title="The answer text.">
-													Answer #<span class="qm-alab"><?=$j+1; ?></span> Text <span class="qm-req-indicator">*</span>
-												</label>
-												<input class="qm-q-a-formel main-input required-field" type="text" id="<?=$this->getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" maxlength="<?=strval(self::$q_a_text_maxtextlen);?>" value="<?=isset($_POST[$basea.'-text']) ? $_POST[$basea.'-text'] : ''; ?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base; ?>-rightans" value="<?=strval($j); ?>"<?php if (isset($_POST[$base.'-rightans']) && $j === intval($_POST[$base.'-rightans'])) echo ' checked'; ?>>
-											</li><?php
+										$answers = array();
+										$rightans = null;
+										$j = 0;
+										for ($aindex = 0; $aindex < $numa; $aindex++) {
+											$abasea = $base . '-a-' . $aindex;
+											if (!isset($_POST[$abasea.'-text']) || empty(trim($_POST[$abasea.'-text']))) {
+												continue;
+											}
+											$answer = &$answers[];
+											$answer['index']    = $j++;
+											$answer['aindex']   = $aindex;
+											$answer['text']     = trim($_POST[$abasea.'-text']);
+											$answer['rightans'] = isset($_POST[$base.'-rightans']) && $aindex === intval($_POST[$base.'-rightans']);
+											if (!isset($rightans) && $answer['rightans']) $rightans = $answer;
 										}
-									?></ul>
-									<!-- insert add answer button here.  -->
-									</div></li>
+										$anuma = count($answers);
+										if (!isset($rightans) && !empty($answers)) {
+											$rightans = $answers[0];
+											$rightans['rightans'] = true;
+										}
+										$rightansset = !empty($answers);
+										for ($j = 0; $j < max(count($answers), $this->num_a_pq); $j++) {
+											if ($j < count($answers)) {
+												outputAns($base, $j, $answers[$j]);
+												continue;
+											}
+											outputAns($base, $j, null, !$rightansset);
+											$rightansset = true;
+										}
+										$anuma = $j;
+									?></ul><!-- insert add answer button here.  --></div>
+									</li>
 								</ul>
 							</div>
+							<input type="hidden" class="qm-q-numa qm-q-formel" data-fname="numa" name="<?=$base; ?>-numa" value="<?=strval($anuma); ?>">
 						</li><?php
 					}
 					?><!-- insert add question button here.  -->
@@ -304,8 +403,8 @@ class QM_New_Quiz {
 			$errors = qm_check_feat_img_upload();
 		}
 
-		$title = addslashes(wp_strip_all_tags(trim( $_POST['qm_quiz_title'] )));
-		$content = addslashes(trim( $_POST['qm_quiz_content'] ));
+		$title = addslashes(trim(wp_strip_all_tags($_POST['qm_quiz_title'], true)));
+		$content = addslashes(wp_kses($_POST['qm_quiz_content'], self::$allowed_desc_tags, array('http', 'https')));
 		//$comments = $_POST['qm_comments_enabled'];
 
 		/*
@@ -316,11 +415,7 @@ class QM_New_Quiz {
 		*/
 
 		//validate title
-		if ( empty( $title ) ) {
-			$errors[] = __( 'Empty quiz title (required).', 'qm' );
-		} else {
-			$title = trim( strip_tags( $title ) );
-		}
+		if ( empty( $title ) ) $errors[] = __( 'Empty quiz title (required).', 'qm' );
 
 		//validate cat
 		if ( get_option( 'qm_allow_cats', 'yes' ) === 'yes' ) {
@@ -336,7 +431,7 @@ class QM_New_Quiz {
 			}
 		}
 
-		if ( !empty( $content ) ) $content = trim( $content );
+		if (!empty($content)) $content = trim($content);
 
 		/*
 		//process tags
@@ -358,17 +453,18 @@ class QM_New_Quiz {
 
 		for ($i = 0; $i < $this->num_q; $i++) {
 			$base = 'qm-q-'.$i;
-			$qtext = isset($_POST[$base.'-text']) ? trim(strip_tags($_POST[$base.'-text'])) : null;
-			if (!isset($qtext) || empty($qtext)) {
-				$errors[] = sprintf(__( 'No text found for question %d (required).', 'qm' ),  $i+1);
-			}
+			$qtext = isset($_POST[$base.'-text']) ? wp_strip_all_tags(trim($_POST[$base.'-text']), true) : null;
+			//if (!isset($qtext) || empty($qtext)) continue;
 			$questions[$i] = array();
 			$questions[$i]['index']  = $i;
 			$questions[$i]['text']   = $qtext;
-			$questions[$i]['sub']    = isset($_POST[$base.'-sub'])    ? trim(strip_tags($_POST[$base.'-sub']))    : null;
-			$questions[$i]['explan'] = isset($_POST[$base.'-explan']) ? trim(strip_tags($_POST[$base.'-explan'])) : null;
-			$questions[$i]['embed']  = isset($_POST[$base.'-embed'])  ? trim(strip_tags($_POST[$base.'-embed']))  : null;
+			$questions[$i]['sub']    = isset($_POST[$base.'-sub'])    ? trim(wp_strip_all_tags($_POST[$base.'-sub'], true))    : null;
+			$questions[$i]['explan'] = isset($_POST[$base.'-explan']) ? trim(wp_strip_all_tags($_POST[$base.'-explan'], true)) : null;
+			$questions[$i]['embed']  = isset($_POST[$base.'-embed'])  ? trim(wp_strip_all_tags($_POST[$base.'-embed'], true))  : null;
 
+			if (!isset($questions[$i]['text']) || strlen($questions[$i]['text']) < 0) {
+				$errors[] = sprintf(__('Text for question %d is too short or does not exist.', 'qm'), $i+1);
+			}
 			if (isset($questions[$i]['text']) && strlen($questions[$i]['text']) > self::$q_text_maxtextlen) {
 				$errors[] = sprintf(__('Text for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'qm'), $i+1, $q_text_maxtextlen);
 			}
@@ -385,7 +481,7 @@ class QM_New_Quiz {
 			if (isset($questions[$i]['embed']) && !empty($questions[$i]['embed'])) {
 				$embed_code = wp_oembed_get($questions[$i]['embed']);
 				if (!$embed_code) {
-					$errors[] = sprintf(__( 'Invalid embed URL for question %d.' ), $i+1);
+					$errors[] = sprintf(__('Invalid embed URL for question %d.'), $i+1);
 				}
 			}
 			//$questions[$currq]['sub'] = isset($_POST[$base.'-sub']) ? trim(strip_tags($_POST[$base.'-sub'])) : null;
@@ -398,39 +494,35 @@ class QM_New_Quiz {
 				$errors[] = sprintf(__( 'No correct answer selected for question %d (required).', 'qm' ), $i+1);
 			}
 			$numa = $_POST[$base.'-numa'];
-			if (!isset($numa) || !is_numeric($numa)) {
-				printf(__('Fatal error: %s-numa hidden field not found or not number for question %d (stores number of answers added to question).', 'qm'), $base, $i+1);
-				return;
-			}
 			$numa = intval($numa);
+			$aindex = 0;
 			$questions[$i]['answers'] = array();
 			for ($j = 0; $j < $numa; $j++) {
 				$abase = $base.'-a-'.$j;
-				$atext = isset($_POST[$abase.'-text']) ? trim(strip_tags($_POST[$abase.'-text'])) : null;
-				if (!isset($atext) || !strlen($atext)) {
-					$errors[] = sprintf(__( 'No text found for question %d, answer %d (required).' ), $i+1, $j+1);
-				}
-				$questions[$i]['answers'][$j]['index'] = $j;
-				$questions[$i]['answers'][$j]['text']  = $atext;
+				$atext = isset($_POST[$abase.'-text']) ? wp_strip_all_tags(trim($_POST[$abase.'-text']), true) : null;
+				if (!isset($atext) || empty($atext)) continue;
+				$answer = &$questions[$i]['answers'][];
+				$answer['index']  = $j;
+				$answer['aindex'] = $aindex++;
+				$answer['text']   = $atext;
 
-				if (strlen($questions[$i]['answers'][$j]['text']) > self::$q_a_text_maxtextlen) {
+				if (strlen($answer['text']) > self::$q_a_text_maxtextlen) {
 					$errors[] = sprintf(__( 'Text for question %d, answer %d is too long. Ensure it has fewer than %d characters.', 'qm' ), $i+1, $j+1, self::$q_a_text_maxtextlen);
 				}
-				$questions[$i]['answers'][$j]['correct'] = isset($questions[$i]['rightans']) && $questions[$i]['rightans'] === $j;
-				if ($questions[$i]['answers'][$j]['correct']) {
-					$questions[$i]['rightans'] = $j; // set correct answer
+				$answer['correct'] = isset($questions[$i]['rightans']) && $questions[$i]['rightans'] === $j;
+				if ($answer['correct']) {
+					$questions[$i]['rightans']  = $j; // set correct answer
+					$questions[$i]['arightans'] = $aindex;
 				}
 			}
-			if (!$questions[$i]['answers'] || count($questions[$i]['answers']) < self::$min_a_pq) {
-				$errors[] = sprintf(__( 'Not enough answers for question %d (found %d). Questions must have at least %d answers.', 'qm' ), $i+1, count($questions[$i]['answers']), self::$num_a_pq);
+			//TODO: fill up to min amount if js hidden item detected in form submit
+			if (!isset($questions[$i]['answers']) || count($questions[$i]['answers']) < self::$min_a_pq) {
+				$errors[] = sprintf(__( 'Not enough answers for question %d (found %d). Questions must have at least %d answers (empty answers are removed autoatically). Answers filled back up to starting amount.', 'qm' ), $i+1, count($questions[$i]['answers']), self::$min_a_pq);
 			} else if ($questions[$i]['answers'] && count($questions[$i]['answers']) > self::$max_a_pq) {
-				$errors[] = sprintf(__( 'Too many answers for question %d (found %d). Questions must have less than or equal to %s answers.', 'qm' ), $i+1, count($questions[$i]['answers']), self::$num_a_pq);
+				$errors[] = sprintf(__( 'Too many answers for question %d (found %d). Questions must have less than or equal to %s answers.', 'qm' ), $i+1, count($questions[$i]['answers']), self::$max_a_pq);
 			}
-			if (!isset($questions[$i]['rightans'])) {
-				$errors[] = sprintf(__( 'No correct answer selected for question %d. Possibly an empty answer was chosen as correct which was removed during submission.', 'qm' ), $i+1);
-			}
-			if ($questions[$i]['rightans'] < 0 || $questions[$i]['rightans'] >= count($questions[$i]['answers'])) {
-				$errors[] = sprintf(__( 'Invalid answer selected for question %d: %d.', 'qm' ), $i+1, $questions[$i]['rightans']);
+			if (isset($questions[$i]['rightans']) && (($questions[$i]['rightans'] < 0) || $questions[$i]['rightans'] >= count($questions[$i]['answers']))) {
+				$errors[] = sprintf(__( 'Invalid answer selected for question %d: %d (may have blank text, will be removed automatically).', 'qm' ), $i+1, $questions[$i]['rightans']+1);
 			}
 		}
 		if (!isset($questions) || count($questions) < self::$min_q) {
@@ -486,16 +578,17 @@ class QM_New_Quiz {
 			$res = add_post_meta($post_id, "_qm-qnum", count($questions), true);
 			for ($i = 0; $i < count($questions); $i++) {
 				$base = '_qm-q-'.$i;
-				$res  = add_post_meta($post_id, $base.'-text', addslashes($questions[$i]['text']), true);
-				if (isset($questions[$i]['sub']))       $res = add_post_meta($post_id, $base.'-sub',    addslashes($questions[$i]['sub']),    true); // optional
-				if (isset($questions[$i]['explan']))    $res = add_post_meta($post_id, $base.'-explan', addslashes($questions[$i]['explan']), true); // optional
-				if (isset($questions[$i]['embed']))     $res = add_post_meta($post_id, $base.'-embed',  addslashes($questions[$i]['embed']),  true); // optional
-				$res = add_post_meta($post_id, $base.'-anum',     count($questions[$i]['answers']), true);
-				$res = add_post_meta($post_id, $base.'-rightans', $questions[$i]['rightans'],       true);
+				$question = &$questions[$i];
+				$res  = add_post_meta($post_id, $base.'-text', addslashes($question['text']), true);
+				if (isset($question['sub']))    $res = add_post_meta($post_id, $base.'-sub',    addslashes($question['sub']),    true); // optional
+				if (isset($question['explan'])) $res = add_post_meta($post_id, $base.'-explan', addslashes($question['explan']), true); // optional
+				if (isset($question['embed']))  $res = add_post_meta($post_id, $base.'-embed',  addslashes($question['embed']),  true); // optional
+				$res = add_post_meta($post_id, $base.'-anum',     count($question['answers']), true);
+				$res = add_post_meta($post_id, $base.'-rightans', $question['rightans'],       true);
 
-				for ($j = 0; $j < count($questions[$i]['answers']); $j++) {
+				for ($j = 0; $j < count($question['answers']); $j++) {
 					$basea = $base.'-a-'.$j;
-					$res = add_post_meta($post_id, $basea.'-text', addslashes($questions[$i]['answers'][$j]['text']), true);
+					$res = add_post_meta($post_id, $basea.'-text', addslashes($question['answers'][$j]['text']), true);
 				}
 			}
 

@@ -38,7 +38,7 @@ function add_open_graph_meta() {
 	if (has_post_thumbnail()) {
 		$post_thumbnail_id  = get_post_thumbnail_id(get_the_ID());
 		$post_thumbnail_url = wp_get_attachment_url( $post_thumbnail_id );
-		echo '<meta property="og:image" content="'.$post_thumbnail_url.'" />';
+		echo '<meta property="og:image" content="'.esc_url($post_thumbnail_url).'" />';
 	}
 	echo '<meta property="og:description" content="'.htmlentities(get_the_excerpt(), ENT_HTML5).'" />';
 }

@@ -153,7 +153,6 @@
 	font-size: 13px;
 }
 
-
 #qm-errors {
 	margin-bottom: 10px;
 	padding: 3px 10px 3px 20px;
@@ -172,6 +171,11 @@
 		#aa020b 10px,
 		#aa020b 20px
 	);
+	text-shadow: 1px 1px black;
+}
+
+#qm-errors > li {
+	padding-bottom: 4px;
 }
 
 .info {
@@ -368,9 +372,35 @@ ul.qm-category-checklist {
 	font-weight: bold;
 }
 
-.invalid {
-	border: 1px solid #f77 !important;
-	background-color: #fee;
+textarea:focus,input:focus{
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    border: 1px solid #c4c4c4;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #d9d9d9;
+    -moz-box-shadow: 0px 0px 8px #d9d9d9;
+    -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+}
+
+input:focus,textarea:focus {
+    outline: none;
+    border: 1px solid #7bc1f7;
+    box-shadow: 0px 0px 8px #7bc1f7;
+    -moz-box-shadow: 0px 0px 8px #7bc1f7;
+    -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+}
+
+textarea.invalid,textarea.invalid:focus,input.invalid,input.invalid:focus {
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    border: 1px solid #f77;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #f88;
+    -moz-box-shadow: 0px 0px 8px #f88;
+    -webkit-box-shadow: 0px 0px 8px #f88;
+	background-color: #fdd;
 }
 
 #tooltip {
