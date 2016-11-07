@@ -268,7 +268,6 @@ function checkFormSubmit (e = null) {
 			}
 		}
 	});
-	/*
 	if (hasError) {
 		if (e != null) {
 			e.preventDefault();
@@ -277,7 +276,6 @@ function checkFormSubmit (e = null) {
 		return false;
 	}
 	$('#qm-submit').prop('disabled', false).removeClass('disabled');
-	*/
 	return true;
 }
 
