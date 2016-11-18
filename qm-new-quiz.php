@@ -181,8 +181,8 @@ class QuizMeister_New_Quiz {
 			}
 			$this->submit_post();
 		}
-		$title = isset( $_POST['quizmeister_quiz_title'] ) ? sanitize_text_field($_POST['quizmeister_quiz_title']) : '';
-		$description = isset( $_POST['quizmeister_quiz_description'] ) ? wp_kses($_POST['quizmeister_quiz_description'], self::$allowed_desc_tags, array('http', 'https')) : '';
+		$title = isset( $_POST['quizmeister_quiz_title'] ) ? sanitize_text_field(stripslashes($_POST['quizmeister_quiz_title'])) : '';
+		$description = isset( $_POST['quizmeister_quiz_description'] ) ? wp_kses(stripslashes($_POST['quizmeister_quiz_description']), self::$allowed_desc_tags, array('http', 'https')) : '';
 
 		if ( get_option( 'quizmeister_allow_cats', 'yes' ) === 'yes' ) {
 			if ( isset( $_POST['category'] ) ) {
@@ -219,7 +219,7 @@ class QuizMeister_New_Quiz {
 									<?php
 									$no_f_img = false;
 									if (isset($_POST['quizmeister_featured_img'])) {
-										$feat_html = quizmeister_feat_img_html($_POST['quizmeister_featured_img']);
+										$feat_html = quizmeister_feat_img_html(stripslashes($_POST['quizmeister_featured_img']));
 										if (isset($feat_html)) {
 											echo $feat_html;
 										} else {
@@ -280,7 +280,7 @@ class QuizMeister_New_Quiz {
 							<label class="qm-q-a-text-lab" for="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" title="The answer text.">
 								Answer #<span class="qm-alab"><?php echo $aindex+1; ?></span> Text <span class="qm-req-indicator">*</span>
 							</label>
-							<input class="qm-q-a-formel main-input required-field" type="text" id="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?php echo $basea; ?>-text" maxlength="<?php echo strval(QuizMeister_New_Quiz::$q_a_text_maxtextlen);?>" value="<?php echo isset($answer) ? sanitize_text_field($answer['text']) : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?php echo $base;?>-rightans" value="<?php echo strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
+							<input class="qm-q-a-formel main-input required-field" type="text" id="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?php echo $basea; ?>-text" maxlength="<?php echo strval(QuizMeister_New_Quiz::$q_a_text_maxtextlen);?>" value="<?php echo isset($answer) ? sanitize_text_field(stripslashes($answer['text'])) : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?php echo $base;?>-rightans" value="<?php echo strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
 						</li><?php
 					}
 
@@ -299,28 +299,28 @@ class QuizMeister_New_Quiz {
 										<label for="<?php echo self::getLabelUnqIDs();?>" title="The main text for this question.">
 											Text <span class="qm-req-indicator">*</span>
 										</label>
-										<input id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?php echo $base;?>-text" maxlength="<?php echo strval(self::$q_text_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-text']) ? sanitize_text_field($_POST[$base.'-text']) : ''; ?>">
+										<input id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?php echo $base;?>-text" maxlength="<?php echo strval(self::$q_text_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-text']) ? sanitize_text_field(stripslashes($_POST[$base.'-text'])) : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-sub-li">
 										<label for="<?php echo self::getLabelUnqIDs();?>" title="The sub-text for this question that goes under the main text.">
 											Sub-Text
 										</label>
-										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?php echo $base; ?>-sub" maxlength="<?php echo strval(self::$q_sub_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-sub']) ? sanitize_text_field($_POST[$base.'-sub']) : ''; ?>">
+										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?php echo $base; ?>-sub" maxlength="<?php echo strval(self::$q_sub_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-sub']) ? sanitize_text_field(stripslashes($_POST[$base.'-sub'])) : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-explan-li">
 										<label for="<?php echo self::getLabelUnqIDs();?>" title="The explanation for the correct answer, displayed on the following page.">
 											Explanation
 										</label>
-										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?php echo $base; ?>-explan" maxlength="<?php echo strval(self::$q_explan_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-explan']) ? sanitize_text_field($_POST[$base.'-explan']) : ''; ?>">
+										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?php echo $base; ?>-explan" maxlength="<?php echo strval(self::$q_explan_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-explan']) ? sanitize_text_field(stripslashes($_POST[$base.'-explan'])) : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-embed-li">
 										<label for="<?php echo self::getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
 											Embed
 										</label>
-										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?php echo $base; ?>-embed" maxlength="<?php echo strval(self::$q_embed_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
+										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?php echo $base; ?>-embed" maxlength="<?php echo strval(self::$q_embed_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-embed']) ? sanitize_text_field(stripslashes($_POST[$base.'-embed'])) : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
 										<div class="clear"></div>
 									</li><?php
 									?><li class="qm-q-a-li"><h3 class="qm-q-a-head">Answers</h3><div class="qm-q-a-ul-wrap"><ul class="qm-q-a-ul"><?php
@@ -375,13 +375,12 @@ class QuizMeister_New_Quiz {
 
 	// find the most child category, then work back from that. more reliable.
 	function max_cat($postvar) {
-		if (!isset($_POST[$postvar])) return array(1);
-		if (!is_array($_POST[$postvar])) return array($_POST[$postvar]);
-		if (empty($_POST[$postvar])) return array(1);
+		if (!isset($_POST[$postvar]) || !$_POST[$postvar]) return array(1);
+		if (!is_array($_POST[$postvar])) return array(intval($_POST[$postvar]));
 		for ($i = 0; $i < count($_POST[$postvar]); $i++) {
-			if ($_POST[$postvar][$i] <= 0) {
+			if (intval($_POST[$postvar][$i]) <= 0) {
 				if ($i <= 0) return array(1);
-				else         return array($_POST[$postvar][$i-1]);
+				else         return array(intval($_POST[$postvar][$i-1]));
 			}
 		}
 		return array(intval(end($_POST[$postvar])));
@@ -401,7 +400,7 @@ class QuizMeister_New_Quiz {
 			$errors = quizmeister_check_feat_img_upload();
 		}
 
-		$title = sanitize_text_field($_POST['quizmeister_quiz_title']);
+		$title = sanitize_text_field(stripslashes($_POST['quizmeister_quiz_title']));
 		$description = wp_kses($_POST['quizmeister_quiz_description'], self::$allowed_desc_tags, array('http', 'https'));
 		//$comments = $_POST['quizmeister_comments_enabled'];
 
@@ -451,14 +450,14 @@ class QuizMeister_New_Quiz {
 
 		for ($i = 0; $i < $this->num_q; $i++) {
 			$base = 'qm-q-'.$i;
-			$qtext = isset($_POST[$base.'-text']) ? sanitize_text_field($_POST[$base.'-text']) : null;
+			$qtext = isset($_POST[$base.'-text']) ? sanitize_text_field(stripslashes($_POST[$base.'-text'])) : null;
 			//if (!isset($qtext) || empty($qtext)) continue;
 			$questions[$i] = array();
 			$questions[$i]['index']  = $i;
 			$questions[$i]['text']   = $qtext;
-			$questions[$i]['sub']    = isset($_POST[$base.'-sub'])    ? sanitize_text_field($_POST[$base.'-sub']) : null;
-			$questions[$i]['explan'] = isset($_POST[$base.'-explan']) ? sanitize_text_field($_POST[$base.'-explan']) : null;
-			$questions[$i]['embed']  = isset($_POST[$base.'-embed'])  ? sanitize_text_field($_POST[$base.'-embed'])  : null;
+			$questions[$i]['sub']    = isset($_POST[$base.'-sub'])    ? sanitize_text_field(stripslashes($_POST[$base.'-sub'])) : null;
+			$questions[$i]['explan'] = isset($_POST[$base.'-explan']) ? sanitize_text_field(stripslashes($_POST[$base.'-explan'])) : null;
+			$questions[$i]['embed']  = isset($_POST[$base.'-embed'])  ? sanitize_text_field(stripslashes($_POST[$base.'-embed']))  : null;
 
 			if (!isset($questions[$i]['text']) || strlen($questions[$i]['text']) < 0) {
 				$errors[] = sprintf(__('Text for question %d is too short or does not exist.', 'quizmeister'), $i+1);
@@ -484,15 +483,14 @@ class QuizMeister_New_Quiz {
 			}
 			//$questions[$currq]['sub'] = isset($_POST[$base.'-sub']) ? trim(strip_tags($_POST[$base.'-sub'])) : null;
 			//echo '$_POST['.$base.'-rightans]: '.$_POST[$base.'-rightans'].'<br>';
-			$rightans = isset($_POST[$base.'-rightans']) && is_numeric($_POST[$base.'-rightans']) ? intval($_POST[$base.'-rightans']) : null;
+			$rightans = isset($_POST[$base.'-rightans']) && is_numeric($_POST[$base.'-rightans']) ? intval(stripslashes($_POST[$base.'-rightans'])) : null;
 			$rightans = isset($rightans) && $rightans >= 0 && $rightans < 10 ? $rightans : null;
 			$questions[$i]['rightans'] = $rightans;
 			//echo '$questions['.$currq.'][rightans]: '.$questions[$currq]['rightans'].'<br>';
 			if (!isset($questions[$i]['rightans'])) {
 				$errors[] = sprintf(__( 'No correct answer selected for question %d (required).', 'quizmeister' ), $i+1);
 			}
-			$numa = $_POST[$base.'-numa'];
-			$numa = intval($numa);
+			$numa = intval($_POST[$base.'-numa']);
 			$aindex = 0;
 			$questions[$i]['answers'] = array();
 			for ($j = 0; $j < $numa; $j++) {
