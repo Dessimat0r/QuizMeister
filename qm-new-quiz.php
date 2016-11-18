@@ -280,7 +280,7 @@ class QuizMeister_New_Quiz {
 							<label class="qm-q-a-text-lab" for="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" title="The answer text.">
 								Answer #<span class="qm-alab"><?php echo $aindex+1; ?></span> Text <span class="qm-req-indicator">*</span>
 							</label>
-							<input class="qm-q-a-formel main-input required-field" type="text" id="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?php echo $basea; ?>-text" maxlength="<?php echo strval(QuizMeister_New_Quiz::$q_a_text_maxtextlen);?>" value="<?php echo isset($answer) ? sanitize_text_field(stripslashes($answer['text'])) : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?php echo $base;?>-rightans" value="<?php echo strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
+							<input class="qm-q-a-formel main-input required-field" type="text" id="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?php echo $basea; ?>-text" maxlength="<?php echo strval(QuizMeister_New_Quiz::$q_a_text_maxtextlen);?>" value="<?php echo isset($answer) ? $answer['text'] : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?php echo $base;?>-rightans" value="<?php echo strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
 						</li><?php
 					}
 
@@ -335,7 +335,7 @@ class QuizMeister_New_Quiz {
 											$answer = &$answers[];
 											$answer['index']    = $j++;
 											$answer['aindex']   = $aindex;
-											$answer['text']     = trim($_POST[$abasea.'-text']);
+											$answer['text']     = sanitize_text_field(stripslashes($answer['text']));
 											$answer['rightans'] = isset($_POST[$base.'-rightans']) && $aindex === intval($_POST[$base.'-rightans']);
 											if (!isset($rightans) && $answer['rightans']) $rightans = $answer;
 										}

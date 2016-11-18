@@ -57,7 +57,7 @@ class QuizMeister_QuizData {
 		$this->num_q      = intval(get_post_meta($post_id, "_qm-qnum", true));
 		$this->start_quiz = isset($_POST['start-quiz']);
 		$this->nonce      = isset($_POST['qm-nonce']) ? $_POST['qm-nonce'] : null;
-		$this->upddb      = isset($_GET['upddb']) ? $_GET['upddb'] : null;
+		$this->upddb      = isset($_GET['upddb']) ? ($_GET['upddb'] === 'true' ? true : false) : null;
 
 		$this->has_q_form = $this->start_quiz || isset($this->frm_quizmeister_q);
 		if ($this->has_q_form) {
