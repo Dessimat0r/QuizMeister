@@ -445,7 +445,7 @@ class QuizMeister_New_Quiz {
 			wp_die(__('Fatal error: qm-numq hidden field not found or not number (stores number of questions added to form).', 'quizmeister'));
 			return;
 		}
-		$this->num_q = $my_numq;
+		$this->num_q = intval($my_numq);
 		$questions = array();
 
 		for ($i = 0; $i < $this->num_q; $i++) {
