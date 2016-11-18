@@ -5,25 +5,25 @@
  * Bitcoin: 1JrHT9F96GjHYHHNFmBN2oRt79DDk5kzHq
  */
 
-require_once "qm-min-functions.php";
+require_once 'qm-min-functions.php';
 
-class QM_Ajax {
+class QuizMeister_Ajax {
 	function __construct() {
-		add_action( 'wp_ajax_nopriv_qm_get_ajax_quiz_child_cats', array($this, 'get_ajax_quiz_child_cats') );
-		add_action( 'wp_ajax_qm_get_ajax_quiz_child_cats', array($this, 'get_ajax_quiz_child_cats') );
+		add_action( 'wp_ajax_nopriv_quizmeister_get_ajax_quiz_child_cats', array($this, 'get_ajax_quiz_child_cats') );
+		add_action( 'wp_ajax_quizmeister_get_ajax_quiz_child_cats', array($this, 'get_ajax_quiz_child_cats') );
 
-		add_action( 'wp_ajax_qm_feat_img_del', array($this, 'featured_img_delete') );
-		add_action( 'wp_ajax_qm_featured_img', array($this, 'featured_img_upload') );
+		add_action( 'wp_ajax_quizmeister_feat_img_del', array($this, 'featured_img_delete') );
+		add_action( 'wp_ajax_quizmeister_featured_img', array($this, 'featured_img_upload') );
 	}
 
 	function get_ajax_quiz_child_cats() {
 		$parent_cat = $_POST['catID'];
 		if (!is_numeric($parent_cat) || ($parent_cat = intval($parent_cat)) <= 0) die();
-		die(get_quiz_child_cats($parent_cat));
+		die(quizmeister_get_quiz_child_cats($parent_cat));
 	}
 
 	function featured_img_delete() {
-		check_ajax_referer( 'qm_nonce', 'nonce' );
+		check_ajax_referer( 'quizmeister_nonce', 'nonce' );
 
 		$attach_id = isset($_POST['attach_id']) ? intval($_POST['attach_id']) : 0;
 		$attachment = get_post($attach_id);
@@ -38,20 +38,20 @@ class QM_Ajax {
 	}
 
 	function featured_img_upload() {
-		check_ajax_referer( 'qm_featured_img', 'nonce' );
+		check_ajax_referer( 'quizmeister_featured_img', 'nonce' );
 
 		$upl_data = array(
-			'name' => $_FILES['qm_featured_img']['name'],
-			'tmp_name' => $_FILES['qm_featured_img']['tmp_name'],
-			'type' => $_FILES['qm_featured_img']['type'],
-			'size' => $_FILES['qm_featured_img']['size'],
-			'error' => $_FILES['qm_featured_img']['error']
+			'name' => $_FILES['quizmeister_featured_img']['name'],
+			'tmp_name' => $_FILES['quizmeister_featured_img']['tmp_name'],
+			'type' => $_FILES['quizmeister_featured_img']['type'],
+			'size' => $_FILES['quizmeister_featured_img']['size'],
+			'error' => $_FILES['quizmeister_featured_img']['error']
 		);
 
-		$attach_id = qm_upload_file( $upl_data );
+		$attach_id = quizmeister_upload_file( $upl_data );
 
 		if ( $attach_id ) {
-			$html = qm_feat_img_html( $attach_id );
+			$html = quizmeister_feat_img_html( $attach_id );
 
 			$response = array(
 				'success' => true,
@@ -68,4 +68,4 @@ class QM_Ajax {
 	}
 }
 
-$qm_ajax = new QM_Ajax();
+$quizmeister_ajax = new QuizMeister_Ajax();

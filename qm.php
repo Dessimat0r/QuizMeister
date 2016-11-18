@@ -4,7 +4,7 @@ Plugin Name: QuizMeister
 Plugin URI: http://demio.us/quizmeister/
 Description: QuizMeister is a quiz-creation plugin for Wordpress that allows users to create and share their own quizzes.
 Author: Chris Dennett
-Version: 1.0
+Version: 1.0.1
 Author URI: http://demio.us/
 */
 
@@ -20,7 +20,7 @@ require_once 'qm-new-quiz.php';
 require_once 'qm-ajax.php';
 require_once 'qm-quiz.php';
 
-class QM_Main {
+class QuizMeister_Main {
 	function __construct() {
 		register_activation_hook( __FILE__, array($this, 'activate') );
 		register_deactivation_hook( __FILE__, array($this, 'deactivate') );
@@ -29,7 +29,8 @@ class QM_Main {
 		add_action( 'init', array($this, 'reg_post_type') );
 
 		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
-		if (get_option('qm_use_theme_quiz_template', 'no') === 'no') {
+		// only allow template override in the case that this is 'yes'
+		if (get_option('quizmeister_use_theme_quiz_template', 'no') === 'no') {
 			add_filter('single_template', array($this, 'change_post_type_template'));
 		}
 		add_filter('wp_link_query_args', array($this, 'mod_wp_link_query_args'));
@@ -70,42 +71,41 @@ class QM_Main {
 		if (is_multisite()) require_once ABSPATH . '/wp-admin/includes/ms.php';
 		require_once ABSPATH . '/wp-admin/includes/template.php';
 
-		wp_enqueue_style( 'qm', $path . '/css/qm.css' );
+		wp_enqueue_style( 'quizmeister', $path . '/css/qm.css' );
 
 		$params = array('plugin_base' => $path);
-		wp_enqueue_script( 'qm', $path . '/js/qm.js', array('jquery') );
+		wp_enqueue_script( 'quizmeister', $path . '/js/qm.js', array('jquery') );
 
-		$feat_img_enabled = (get_option( 'qm_enable_featured_image', 'yes' ) === 'yes') ? true : false;
+		$feat_img_enabled = (get_option('quizmeister_enable_featured_image', 'yes') === 'yes') ? true : false;
 
-		wp_localize_script( 'qm', 'qm', array(
+		wp_localize_script('quizmeister', 'quizmeister', array(
 			'plugin_base' => $path,
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'postingMsg' => __( 'Posting..', 'qm' ),
-			'confirmMsg' => __( 'Are you sure?', 'qm' ),
-			'nonce' => wp_create_nonce( 'qm_nonce' ),
+			'confirmMsg' => __( 'Are you sure?', 'quizmeister' ),
+			'nonce' => wp_create_nonce( 'quizmeister_nonce' ),
 			'featEnabled' => $feat_img_enabled,
 			'plupload' => array(
 				'runtimes' => 'html5,silverlight,flash,html4',
 				'browse_button' => 'qm-ft-upload-pickfiles',
 				'container' => 'qm-ft-upload-container',
-				'file_data_name' => 'qm_featured_img',
-				'max_file_size' => wp_max_upload_size() . 'b',
-				'url' => admin_url( 'admin-ajax.php' ) . '?action=qm_featured_img&nonce=' . wp_create_nonce( 'qm_featured_img' ),
+				'file_data_name' => 'quizmeister_featured_img',
+				'url' => admin_url( 'admin-ajax.php' ) . '?action=quizmeister_featured_img&nonce=' . wp_create_nonce( 'quizmeister_featured_img' ),
 				'flash_swf_url' => includes_url( 'js/plupload/plupload.flash.swf' ),
 				'silverlight_xap_url' => includes_url( 'js/plupload/plupload.silverlight.xap' ),
-				'filters' => array(array('title' => __( 'Image files' ), 'extensions' => 'jpg,gif,png')),
+				'filters' => array(array('title' => __( 'Image files' ), 'extensions' => 'jpg,jpeg,gif,png')),
 				'multipart' => true,
-				'urlstream_upload' => true
+				'urlstream_upload' => true,
+				'max_file_size' => wp_max_upload_size() . 'b'
 			)
-		) );
+		));
 	}
 
 	function load_textdomain() {
-		$locale = apply_filters( 'qm_locale', get_locale() );
+		$locale = apply_filters( 'quizmeister_locale', get_locale() );
 		$mofile = dirname( __FILE__ ) . "/languages/qm-{$locale}.mo";
 
-		if ( file_exists( $mofile ) ) {
-			load_textdomain( 'qm', $mofile );
+		if (file_exists($mofile)) {
+			load_textdomain('quizmeister', $mofile);
 		}
 	}
 
@@ -137,14 +137,6 @@ class QM_Main {
 			)
 		);
 	}
-
-	public static function log( $type = '', $msg = '' ) {
-		if ( WP_DEBUG == true ) {
-			$msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
-			error_log( $msg, 3, dirname( __FILE__ ) . '/log.txt' );
-		}
-	}
-
 }
 
-$qm = new QM_Main();
+$quizmeister_main = new QuizMeister_Main();

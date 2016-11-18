@@ -4,7 +4,7 @@
  * Donate by PayPal to dessimat0r@gmail.com.
  * Bitcoin: 1JrHT9F96GjHYHHNFmBN2oRt79DDk5kzHq
  */
-class QM_New_Quiz {
+class QuizMeister_New_Quiz {
 	// statics
 	public static $min_q    = 1;  // min questions, int
 	public static $min_a_pq = 2;  // min answers per question, int
@@ -89,13 +89,13 @@ class QM_New_Quiz {
 	public $num_a_pq = 4;  // initial answers per question, int
 
 	function __construct() {
-		add_shortcode('qm_new_quiz', array($this, 'shortcode')); // shortcode for the quiz
+		add_shortcode('quizmeister_new_quiz', array($this, 'shortcode')); // shortcode for the quiz
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts')); // has to be done *early*
 	}
 
 	// Handles the add quiz shortcode
 	function shortcode( $atts ) {
-		ob_start(); // should be in qm_buffer_start in init hook, but make sure
+		ob_start(); // should be in quizmeister_buffer_start in init hook, but make sure
 		$this->echo_quiz_form();
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -131,7 +131,7 @@ class QM_New_Quiz {
 		wp_localize_script('quiz_form', 'qfdata', $tarr);
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('quiz_form');
-		$featured_image = get_option( 'qm_enable_featured_image', 'yes' );
+		$featured_image = get_option( 'quizmeister_enable_featured_image', 'yes' );
 		if ( $featured_image == 'yes' ) {
 			if ( current_theme_supports( 'post-thumbnails' ) ) {
 				wp_enqueue_script('plupload-all');
@@ -158,35 +158,33 @@ class QM_New_Quiz {
 	 */
 	function echo_quiz_form() {
 		if (!is_user_logged_in()) {
-			printf( __( 'To create a quiz, you must be <a href="%s">logged in</a>. If you do not have a user account here, you can create one (or link an account through Facebook, Twitter, Google, etc. via the login page if the administrator has installed the relevant plugins.)', 'qm' ), wp_login_url( get_permalink() ) );			return;
+			printf( __( 'To create a quiz, you must be <a href="%s">logged in</a>. If you do not have a user account here, you can create one (or link an account through Facebook, Twitter, Google, etc. via the login page if the administrator has installed the relevant plugins.)', 'quizmeister' ), wp_login_url( get_permalink() ) );			return;
 		}
 		$can_post = 'yes';
-		$can_post_info = __('Unable to create quiz.','qm');
-		add_filter('qm_can_post', $can_post);
-		add_filter('qm_can_post_info', $can_post_info);
+		$can_post_info = __('Unable to create quiz.','quizmeister');
+		add_filter('quizmeister_can_post', $can_post);
+		add_filter('quizmeister_can_post_info', $can_post_info);
 		if (!$can_post) {
 			// forbidden from posting
-			?><div class="info"><?=$can_post_info;?></div><?php
+			?><div class="info"><?php echo $can_post_info;?></div><?php
 			return;
 		}
 		add_filter('upload_mimes', array($this, 'mod_upl_mimes'));
 
 		$userdata = wp_get_current_user();
-		$_POST = stripslashes_deep( $_POST );
+		$featured_image = get_option( 'quizmeister_enable_featured_image', 'yes' ) === 'yes';
 
-		$featured_image = get_option( 'qm_enable_featured_image', 'yes' ) === 'yes';
-
-		if ( isset( $_POST['qm_new_quiz_submit'] ) ) {
+		if ( isset( $_POST['quizmeister_new_quiz_submit'] ) ) {
 			$nonce = $_REQUEST['_wpnonce'];
 			if ( !wp_verify_nonce( $nonce, 'qm-new-quiz' ) ) {
 				wp_die( __( 'Cheating?' ) );
 			}
 			$this->submit_post();
 		}
-		$title = isset( $_POST['qm_quiz_title'] ) ? esc_attr( $_POST['qm_quiz_title'] ) : '';
-		$description = isset( $_POST['qm_quiz_content'] ) ? $_POST['qm_quiz_content'] : '';
+		$title = isset( $_POST['quizmeister_quiz_title'] ) ? sanitize_text_field($_POST['quizmeister_quiz_title']) : '';
+		$description = isset( $_POST['quizmeister_quiz_description'] ) ? wp_kses($_POST['quizmeister_quiz_description'], self::$allowed_desc_tags, array('http', 'https')) : '';
 
-		if ( get_option( 'qm_allow_cats', 'yes' ) === 'yes' ) {
+		if ( get_option( 'quizmeister_allow_cats', 'yes' ) === 'yes' ) {
 			if ( isset( $_POST['category'] ) ) {
 				$maxcat = $this->max_cat('category');
 				if ($maxcat >= 0) {
@@ -197,92 +195,92 @@ class QM_New_Quiz {
 		?><div id="qm-quiz-area">
 			<form id="qm-new-quiz-form" name="qm-new-quiz-form" action="" method="POST">
 				<?php wp_nonce_field( 'qm-new-quiz' ) ?>
-				<input type="hidden" id="qm-numq" name="qm-numq" value="<?=strval($this->num_q); ?>">
+				<input type="hidden" id="qm-numq" name="qm-numq" value="<?php echo strval($this->num_q); ?>">
 				<ul id="qm-quiz-form" class="qm-quiz-form">
-					<?php do_action( 'qm_new_quiz_form_top' ); //plugin hook   ?>
+					<?php do_action( 'quizmeister_new_quiz_form_top' ); //plugin hook   ?>
 					<li>
 						<label for="new-quiz-title" title="Title for the quiz that describes it succinctly.">Quiz Title <span class="qm-req-indicator">*</span></label>
-						<input class="required-field main-input" type="text" value="<?=$title; ?>" name="qm_quiz_title" id="new-quiz-title" minlength="2">
+						<input class="required-field main-input" type="text" value="<?php echo $title; ?>" name="quizmeister_quiz_title" id="new-quiz-title" minlength="2">
 						<div class="clear"></div>
 					</li>
-					<?php if ( get_option( 'qm_allow_cats', 'yes' ) == 'yes' ) { ?>
+					<?php if ( get_option( 'quizmeister_allow_cats', 'yes' ) == 'yes' ) { ?>
 						<li>
 							<label for="category[]" title="Most relevant category for the quiz (depending on settings, it may be required to choose one other than 'Uncategorized').">Category <span class="qm-req-indicator">*</span></label>
-							<?php qm_echo_cat_sels(isset($post_category) ? $post_category : null);?>
+							<?php quizmeister_echo_cat_sels(isset($post_category) ? $post_category : null);?>
 							<div class="clear"></div>
 						</li>
 					<?php } ?>
 					<?php if ( $featured_image == 'yes' ) {
 						?><li><?php
-						if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
-							<label id="qm-ft-upload-label" for="qm-ft-upload-pickfiles" title="Descriptive image that appears before a user starts a quiz and is incorporated into social media share functionality."><?php _e( 'Featured Image', 'qm' ); ?></label>
+						if (current_theme_supports('post-thumbnails')) { ?>
+							<label id="qm-ft-upload-label" for="qm-ft-upload-pickfiles" title="Descriptive image that appears before a user starts a quiz and is incorporated into social media share functionality."><?php _e( 'Featured Image', 'quizmeister' ); ?></label>
 							<span id="qm-ft-upload-container" class="main-input">
 								<span id="qm-ft-upload-filelist">
 									<?php
 									$no_f_img = false;
-									if (isset($_POST['qm_featured_img'])) {
-										$feat_html = qm_feat_img_html($_POST['qm_featured_img']);
+									if (isset($_POST['quizmeister_featured_img'])) {
+										$feat_html = quizmeister_feat_img_html($_POST['quizmeister_featured_img']);
 										if (isset($feat_html)) {
 											echo $feat_html;
 										} else {
 											$no_f_img = true;
 										}
 									}
-									?><input type="button" id="qm-ft-upload-pickfiles" class="qm-small-button" value="<?php _e( 'Upload Image', 'qm' ); ?>"<?=isset($_POST['qm_featured_img']) && !$no_f_img ?' style="display: none;"':''; ?> />
+									?><input type="button" id="qm-ft-upload-pickfiles" class="qm-small-button" value="<?php _e( 'Upload Image', 'quizmeister' ); ?>"<?php echo isset($_POST['quizmeister_featured_img']) && !$no_f_img ?' style="display: none;"':''; ?> />
 								</span>
 							</span>
 						<?php } else { ?>
-							<span class="info"><?php _e( 'Your theme doesn\'t support featured image', 'qm' ) ?></span><div class="clear"></span>
+							<span class="info"><?php _e( 'Your theme doesn\'t support featured image', 'quizmeister' ) ?></span><div class="clear"></span>
 						<?php } ?>
 						<div class="clear"></div>
 						</li>
 					<?php } ?>
 
-					<?php do_action( 'qm_new_quiz_form_description' ); ?>
+					<?php do_action( 'quizmeister_new_quiz_form_description' ); ?>
 					<li>
 						<label for="new-quiz-desc" title="Text that appears before a user starts a quiz in order to explain it or provide background detail.">Quiz Text</label>
 						<span class="main-input">
 						<?php
-						$editor = get_option( 'qm_editor_type', 'full' );
+						$editor = get_option( 'quizmeister_editor_type', 'full' );
 						if ( $editor == 'full' ) {
 							?>
 							<div class="qm-richtext">
-								<?php wp_editor( $description, 'new-quiz-desc', array('textarea_name' => 'qm_quiz_content', 'editor_class' => 'new-quiz-desc richtext', 'teeny' => false, 'textarea_rows' => 8) ); ?>
+								<?php wp_editor( $description, 'new-quiz-desc', array('textarea_name' => 'quizmeister_quiz_description', 'editor_class' => 'new-quiz-desc richtext', 'teeny' => false, 'textarea_rows' => 8) ); ?>
 							</div>
 						<?php } else if ( $editor == 'rich' ) { ?>
 							<div class="qm-richtext">
-								<?php wp_editor( $description, 'new-quiz-desc', array('textarea_name' => 'qm_quiz_content', 'editor_class' => 'new-quiz-desc richtext', 'teeny' => true, 'media_buttons' => false, 'quicktags' => false, 'textarea_rows' => 8) ); ?>
+								<?php wp_editor( $description, 'new-quiz-desc', array('textarea_name' => 'quizmeister_quiz_description', 'editor_class' => 'new-quiz-desc richtext', 'teeny' => true, 'media_buttons' => false, 'quicktags' => false, 'textarea_rows' => 8) ); ?>
 							</div>
 						<?php } else { ?>
-							<textarea name="qm_quiz_content" class="qm_quiz_content" id="new-quiz-desc" cols="60" rows="8"><?=esc_textarea( $description ); ?></textarea>
+							<textarea name="quizmeister_quiz_description" class="quizmeister_quiz_description" id="new-quiz-desc" cols="60" rows="8"><?php echo esc_textarea($description); ?></textarea>
 						<?php } ?>
 						</span>
 						<div class="clear"></div>
 					</li>
 					<?php
-					do_action( 'qm_new_quiz_form_after_description' );
+					do_action( 'quizmeister_new_quiz_form_after_description' );
 					/*
 					TODO: we don't support tags yet
-					if ( get_option( 'qm_allow_tags', 'yes' ) === 'yes' ) {
+					if ( get_option( 'quizmeister_allow_tags', 'yes' ) === 'yes' ) {
 						?>
 						<li>
 							<label for="new-quiz-tags" title="Space-delimited list of tags that apply to the quiz.">Tags</label>
-							<input type="text" name="qm_quiz_tags" id="new-quiz-tags" class="new-quiz-tags main-input">
+							<input type="text" name="quizmeister_quiz_tags" id="new-quiz-tags" class="new-quiz-tags main-input">
 							<div class="clear"></div>
 						</li>
 						<?php
 					}
 
-					do_action( 'qm_new_quiz_form_tags');
+					do_action( 'quizmeister_new_quiz_form_tags');
 					*/
 
 					function outputAns($base, $aindex, $answer = null, $forcerightans = false) {
 						$basea  = $base . '-a-' . $aindex;
-						?><li class="qm-q-a-text-li" data-anum="<?=strval($aindex);?>">
-							<label class="qm-q-a-text-lab" for="<?=QM_New_Quiz::getLabelUnqIDs();?>" title="The answer text.">
-								Answer #<span class="qm-alab"><?=$aindex+1; ?></span> Text <span class="qm-req-indicator">*</span>
+						?><li class="qm-q-a-text-li" data-anum="<?php echo strval($aindex);?>">
+							<label class="qm-q-a-text-lab" for="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" title="The answer text.">
+								Answer #<span class="qm-alab"><?php echo $aindex+1; ?></span> Text <span class="qm-req-indicator">*</span>
 							</label>
-							<input class="qm-q-a-formel main-input required-field" type="text" id="<?=QM_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?=$basea; ?>-text" maxlength="<?=strval(QM_New_Quiz::$q_a_text_maxtextlen);?>" value="<?=isset($answer) ? $answer['text'] : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?=$base;?>-rightans" value="<?=strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
+							<input class="qm-q-a-formel main-input required-field" type="text" id="<?php echo QuizMeister_New_Quiz::getLabelUnqIDs();?>" data-fname="text" name="<?php echo $basea; ?>-text" maxlength="<?php echo strval(QuizMeister_New_Quiz::$q_a_text_maxtextlen);?>" value="<?php echo isset($answer) ? sanitize_text_field($answer['text']) : '';?>">&nbsp;<input type="radio" class="qm-q-formel required-field qm-q-rightans" data-fname="rightans" name="<?php echo $base;?>-rightans" value="<?php echo strval($aindex); ?>"<?php if ($forcerightans || (isset($answer) && $answer['rightans'])) echo ' checked'; ?>>
 						</li><?php
 					}
 
@@ -293,36 +291,36 @@ class QM_New_Quiz {
 						$numa  = isset($_POST[$base.'-numa']) ? intval($_POST[$base.'-numa']) : $this->num_a_pq;
 						$anuma = $numa;
 						?>
-						<li class="qm-q-li" data-qnum="<?=$i;?>">
-							<h2 class="qm-q-head">Question #<span class="qm-qlab"><?=$i+1;?></span></h2>
+						<li class="qm-q-li" data-qnum="<?php echo $i;?>">
+							<h2 class="qm-q-head">Question #<span class="qm-qlab"><?php echo $i+1;?></span></h2>
 							<div class="qm-q-ul-wrap">
 								<ul class="qm-q-ul">
 									<li class="qm-q-text-li">
-										<label for="<?=self::getLabelUnqIDs();?>" title="The main text for this question.">
+										<label for="<?php echo self::getLabelUnqIDs();?>" title="The main text for this question.">
 											Text <span class="qm-req-indicator">*</span>
 										</label>
-										<input id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?=$base;?>-text" maxlength="<?=strval(self::$q_text_maxtextlen);?>" value="<?=isset($_POST[$base.'-text']) ? $_POST[$base.'-text'] : ''; ?>">
+										<input id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel required-field main-input" type="text" data-fname="text" name="<?php echo $base;?>-text" maxlength="<?php echo strval(self::$q_text_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-text']) ? sanitize_text_field($_POST[$base.'-text']) : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-sub-li">
-										<label for="<?=self::getLabelUnqIDs();?>" title="The sub-text for this question that goes under the main text.">
+										<label for="<?php echo self::getLabelUnqIDs();?>" title="The sub-text for this question that goes under the main text.">
 											Sub-Text
 										</label>
-										<input type="text" id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?=$base; ?>-sub" maxlength="<?=strval(self::$q_sub_maxtextlen);?>" value="<?=isset($_POST[$base.'-sub']) ? $_POST[$base.'-sub'] : ''; ?>">
+										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="sub" name="<?php echo $base; ?>-sub" maxlength="<?php echo strval(self::$q_sub_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-sub']) ? sanitize_text_field($_POST[$base.'-sub']) : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-explan-li">
-										<label for="<?=self::getLabelUnqIDs();?>" title="The explanation for the correct answer, displayed on the following page.">
+										<label for="<?php echo self::getLabelUnqIDs();?>" title="The explanation for the correct answer, displayed on the following page.">
 											Explanation
 										</label>
-										<input type="text" id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?=$base; ?>-explan" maxlength="<?=strval(self::$q_explan_maxtextlen);?>" value="<?=isset($_POST[$base.'-explan']) ? $_POST[$base.'-explan'] : ''; ?>">
+										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="explan" name="<?php echo $base; ?>-explan" maxlength="<?php echo strval(self::$q_explan_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-explan']) ? sanitize_text_field($_POST[$base.'-explan']) : ''; ?>">
 										<div class="clear"></div>
 									</li>
 									<li class="qm-q-embed-li">
-										<label for="<?=self::getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
+										<label for="<?php echo self::getLabelUnqIDs();?>" title="Any oEmbed-enabled link can go here. oEmbed-enabled sites include Imgur, YouTube, Tumblr, Twitter, Vine, Flickr and Vimeo, amongst others. Example: https://www.youtube.com/watch?v=FTQbiNvZqaY.">
 											Embed
 										</label>
-										<input type="text" id="<?=self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?=$base; ?>-embed" maxlength="<?=strval(self::$q_embed_maxtextlen);?>" value="<?=isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
+										<input type="text" id="<?php echo self::getLabelUnqIDs();?>" class="qm-q-formel main-input" data-fname="embed" name="<?php echo $base; ?>-embed" maxlength="<?php echo strval(self::$q_embed_maxtextlen);?>" value="<?php echo isset($_POST[$base.'-embed']) ? $_POST[$base.'-embed'] : ''; ?>" placeholder="YouTube, Imgur, Vimeo URL, etc.">
 										<div class="clear"></div>
 									</li><?php
 									?><li class="qm-q-a-li"><h3 class="qm-q-a-head">Answers</h3><div class="qm-q-a-ul-wrap"><ul class="qm-q-a-ul"><?php
@@ -360,15 +358,15 @@ class QM_New_Quiz {
 									</li>
 								</ul>
 							</div>
-							<input type="hidden" class="qm-q-numa qm-q-formel" data-fname="numa" name="<?=$base; ?>-numa" value="<?=strval($anuma); ?>">
+							<input type="hidden" class="qm-q-numa qm-q-formel" data-fname="numa" name="<?php echo $base; ?>-numa" value="<?php echo strval($anuma); ?>">
 						</li><?php
 					}
 					?><!-- insert add question button here.  -->
 					<li id="qm-submit-li">
-						<input id="qm-submit" type="submit" name="qm_new_quiz_submit" value="Submit">
-						<input type="hidden" name="qm_new_quiz_submit" value="yes" />
+						<input id="qm-submit" type="submit" name="quizmeister_new_quiz_submit" value="Submit">
+						<input type="hidden" name="quizmeister_new_quiz_submit" value="yes" />
 					</li>
-					<?php do_action( 'qm_new_quiz_form_bottom' ); ?>
+					<?php do_action( 'quizmeister_new_quiz_form_bottom' ); ?>
 					</ul>
 				</li>
 			</form>
@@ -399,39 +397,39 @@ class QM_New_Quiz {
 		$errors = array();
 
 		// if there is a featured image, validate it (for security..)
-		if ( isset($_FILES['qm_featured_img']) ) {
-			$errors = qm_check_feat_img_upload();
+		if ( isset($_FILES['quizmeister_featured_img']) ) {
+			$errors = quizmeister_check_feat_img_upload();
 		}
 
-		$title = addslashes(trim(wp_strip_all_tags($_POST['qm_quiz_title'], true)));
-		$content = addslashes(wp_kses($_POST['qm_quiz_content'], self::$allowed_desc_tags, array('http', 'https')));
-		//$comments = $_POST['qm_comments_enabled'];
+		$title = sanitize_text_field($_POST['quizmeister_quiz_title']);
+		$description = wp_kses($_POST['quizmeister_quiz_description'], self::$allowed_desc_tags, array('http', 'https'));
+		//$comments = $_POST['quizmeister_comments_enabled'];
 
 		/*
 		$tags = '';
-		if ( isset( $_POST['qm_quiz_tags'] ) ) {
-			$tags = qm_clean_tags( $_POST['qm_quiz_tags'] );
+		if ( isset( $_POST['quizmeister_quiz_tags'] ) ) {
+			$tags = quizmeister_clean_tags( $_POST['quizmeister_quiz_tags'] );
 		}
 		*/
 
 		//validate title
-		if ( empty( $title ) ) $errors[] = __( 'Empty quiz title (required).', 'qm' );
+		if ( empty( $title ) ) $errors[] = __( 'Empty quiz title (required).', 'quizmeister' );
 
 		//validate cat
-		if ( get_option( 'qm_allow_cats', 'yes' ) === 'yes' ) {
+		if ( get_option( 'quizmeister_allow_cats', 'yes' ) === 'yes' ) {
 			if ( isset( $_POST['category'] ) ) {
 				$maxcat = $this->max_cat('category');
 				if ($maxcat >= 0) {
 					$post_category = $maxcat;
 				} else {
-					$errors[] = __( 'No category selected (required).', 'qm' );
+					$errors[] = __( 'No category selected (required).', 'quizmeister' );
 				}
 			} else {
-				$errors[] = __( 'No category selected (required).', 'qm' );
+				$errors[] = __( 'No category selected (required).', 'quizmeister' );
 			}
 		}
 
-		if (!empty($content)) $content = trim($content);
+		if (!empty($description)) $description = trim($description);
 
 		/*
 		//process tags
@@ -441,11 +439,11 @@ class QM_New_Quiz {
 		*/
 
 		//post attachment
-		$attach_id = isset( $_POST['qm_featured_img'] ) ? intval( $_POST['qm_featured_img'] ) : 0;
+		$attach_id = isset( $_POST['quizmeister_featured_img'] ) ? intval( $_POST['quizmeister_featured_img'] ) : 0;
 
 		$my_numq = $_POST['qm-numq'];
 		if (!isset($my_numq) || !is_numeric($my_numq)) {
-			wp_die(__('Fatal error: qm-numq hidden field not found or not number (stores number of questions added to form).', 'qm'));
+			wp_die(__('Fatal error: qm-numq hidden field not found or not number (stores number of questions added to form).', 'quizmeister'));
 			return;
 		}
 		$this->num_q = $my_numq;
@@ -453,29 +451,29 @@ class QM_New_Quiz {
 
 		for ($i = 0; $i < $this->num_q; $i++) {
 			$base = 'qm-q-'.$i;
-			$qtext = isset($_POST[$base.'-text']) ? wp_strip_all_tags(trim($_POST[$base.'-text']), true) : null;
+			$qtext = isset($_POST[$base.'-text']) ? sanitize_text_field($_POST[$base.'-text']) : null;
 			//if (!isset($qtext) || empty($qtext)) continue;
 			$questions[$i] = array();
 			$questions[$i]['index']  = $i;
 			$questions[$i]['text']   = $qtext;
-			$questions[$i]['sub']    = isset($_POST[$base.'-sub'])    ? trim(wp_strip_all_tags($_POST[$base.'-sub'], true))    : null;
-			$questions[$i]['explan'] = isset($_POST[$base.'-explan']) ? trim(wp_strip_all_tags($_POST[$base.'-explan'], true)) : null;
-			$questions[$i]['embed']  = isset($_POST[$base.'-embed'])  ? trim(wp_strip_all_tags($_POST[$base.'-embed'], true))  : null;
+			$questions[$i]['sub']    = isset($_POST[$base.'-sub'])    ? sanitize_text_field($_POST[$base.'-sub']) : null;
+			$questions[$i]['explan'] = isset($_POST[$base.'-explan']) ? sanitize_text_field($_POST[$base.'-explan']) : null;
+			$questions[$i]['embed']  = isset($_POST[$base.'-embed'])  ? sanitize_text_field($_POST[$base.'-embed'])  : null;
 
 			if (!isset($questions[$i]['text']) || strlen($questions[$i]['text']) < 0) {
-				$errors[] = sprintf(__('Text for question %d is too short or does not exist.', 'qm'), $i+1);
+				$errors[] = sprintf(__('Text for question %d is too short or does not exist.', 'quizmeister'), $i+1);
 			}
 			if (isset($questions[$i]['text']) && strlen($questions[$i]['text']) > self::$q_text_maxtextlen) {
-				$errors[] = sprintf(__('Text for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'qm'), $i+1, $q_text_maxtextlen);
+				$errors[] = sprintf(__('Text for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'quizmeister'), $i+1, $q_text_maxtextlen);
 			}
 			if (isset($questions[$i]['sub']) && strlen($questions[$i]['sub']) > self::$q_sub_maxtextlen) {
-				$errors[] = sprintf(__('Sub-text for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'qm'), $i+1, $q_sub_maxtextlen);
+				$errors[] = sprintf(__('Sub-text for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'quizmeister'), $i+1, $q_sub_maxtextlen);
 			}
 			if (isset($questions[$i]['explan']) && strlen($questions[$i]['explan']) > self::$q_explan_maxtextlen) {
-				$errors[] = sprintf(__('Explanation for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'qm'), $i+1, $q_explan_maxtextlen);
+				$errors[] = sprintf(__('Explanation for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'quizmeister'), $i+1, $q_explan_maxtextlen);
 			}
 			if (isset($questions[$i]['embed']) && strlen($questions[$i]['embed']) > self::$q_embed_maxtextlen) {
-				$errors[] = sprintf(__('Embed URL for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'qm'), $i+1, $q_embed_maxtextlen);
+				$errors[] = sprintf(__('Embed URL for question %d is too long. Ensure it has fewer than or equal to %d characters.', 'quizmeister'), $i+1, $q_embed_maxtextlen);
 			}
 			// TODO: provide ajax tracking of oembed via ajax callback
 			if (isset($questions[$i]['embed']) && !empty($questions[$i]['embed'])) {
@@ -491,7 +489,7 @@ class QM_New_Quiz {
 			$questions[$i]['rightans'] = $rightans;
 			//echo '$questions['.$currq.'][rightans]: '.$questions[$currq]['rightans'].'<br>';
 			if (!isset($questions[$i]['rightans'])) {
-				$errors[] = sprintf(__( 'No correct answer selected for question %d (required).', 'qm' ), $i+1);
+				$errors[] = sprintf(__( 'No correct answer selected for question %d (required).', 'quizmeister' ), $i+1);
 			}
 			$numa = $_POST[$base.'-numa'];
 			$numa = intval($numa);
@@ -499,7 +497,7 @@ class QM_New_Quiz {
 			$questions[$i]['answers'] = array();
 			for ($j = 0; $j < $numa; $j++) {
 				$abase = $base.'-a-'.$j;
-				$atext = isset($_POST[$abase.'-text']) ? wp_strip_all_tags(trim($_POST[$abase.'-text']), true) : null;
+				$atext = isset($_POST[$abase.'-text']) ? sanitize_text_field($_POST[$abase.'-text']) : null;
 				if (!isset($atext) || empty($atext)) continue;
 				$answer = &$questions[$i]['answers'][];
 				$answer['index']  = $j;
@@ -507,7 +505,7 @@ class QM_New_Quiz {
 				$answer['text']   = $atext;
 
 				if (strlen($answer['text']) > self::$q_a_text_maxtextlen) {
-					$errors[] = sprintf(__( 'Text for question %d, answer %d is too long. Ensure it has fewer than %d characters.', 'qm' ), $i+1, $j+1, self::$q_a_text_maxtextlen);
+					$errors[] = sprintf(__( 'Text for question %d, answer %d is too long. Ensure it has fewer than %d characters.', 'quizmeister' ), $i+1, $j+1, self::$q_a_text_maxtextlen);
 				}
 				$answer['correct'] = isset($questions[$i]['rightans']) && $questions[$i]['rightans'] === $j;
 				if ($answer['correct']) {
@@ -517,35 +515,35 @@ class QM_New_Quiz {
 			}
 			//TODO: fill up to min amount if js hidden item detected in form submit
 			if (!isset($questions[$i]['answers']) || count($questions[$i]['answers']) < self::$min_a_pq) {
-				$errors[] = sprintf(__( 'Not enough answers for question %d (found %d). Questions must have at least %d answers (empty answers are removed autoatically). Answers filled back up to starting amount.', 'qm' ), $i+1, count($questions[$i]['answers']), self::$min_a_pq);
+				$errors[] = sprintf(__( 'Not enough answers for question %d (found %d). Questions must have at least %d answers (empty answers are removed autoatically). Answers filled back up to starting amount.', 'quizmeister' ), $i+1, count($questions[$i]['answers']), self::$min_a_pq);
 			} else if ($questions[$i]['answers'] && count($questions[$i]['answers']) > self::$max_a_pq) {
-				$errors[] = sprintf(__( 'Too many answers for question %d (found %d). Questions must have less than or equal to %s answers.', 'qm' ), $i+1, count($questions[$i]['answers']), self::$max_a_pq);
+				$errors[] = sprintf(__( 'Too many answers for question %d (found %d). Questions must have less than or equal to %s answers.', 'quizmeister' ), $i+1, count($questions[$i]['answers']), self::$max_a_pq);
 			}
 			if (isset($questions[$i]['rightans']) && (($questions[$i]['rightans'] < 0) || $questions[$i]['rightans'] >= count($questions[$i]['answers']))) {
-				$errors[] = sprintf(__( 'Invalid answer selected for question %d: %d (may have blank text, will be removed automatically).', 'qm' ), $i+1, $questions[$i]['rightans']+1);
+				$errors[] = sprintf(__( 'Invalid answer selected for question %d: %d (may have blank text, will be removed automatically).', 'quizmeister' ), $i+1, $questions[$i]['rightans']+1);
 			}
 		}
 		if (!isset($questions) || count($questions) < self::$min_q) {
-			$errors[] = sprintf(__( 'Too few questions in quiz (found %d). Quiz must have at least %d questions.', 'qm' ), count($questions), self::$min_q);
+			$errors[] = sprintf(__( 'Too few questions in quiz (found %d). Quiz must have at least %d questions.', 'quizmeister' ), count($questions), self::$min_q);
 		} else if (isset($questions) && count($questions) > self::$max_q) {
-			$errors[] = sprintf(__( 'Too many questions in quiz (found %d). Quiz must have less than or equal to %d questions.', 'qm' ), count($questions), self::$max_q);
+			$errors[] = sprintf(__( 'Too many questions in quiz (found %d). Quiz must have less than or equal to %d questions.', 'quizmeister' ), count($questions), self::$max_q);
 		}
-		$errors = apply_filters( 'qm_new_quiz_validation', $errors );
+		$errors = apply_filters( 'quizmeister_new_quiz_validation', $errors );
 
 		// if errors, show them - otherwise continue to process the form
 		if ($errors) {
-			echo_qm_errors($errors);
+			quizmeister_echo_errors($errors);
 			return;
 		}
 		$post_author = $userdata->ID;
 
 		if (!isset($post_category)) {
-			$post_category = get_option( 'qm_default_cat', 1);
+			$post_category = get_option( 'quizmeister_default_cat', 1);
 		}
 
 		$my_post = array(
 			'post_title' => $title,
-			'post_content' => $content,
+			'post_content' => $description,
 			'post_status' => 'publish',
 			'post_author' => $post_author,
 			'post_category' => $post_category,
@@ -556,15 +554,15 @@ class QM_New_Quiz {
 		);
 
 		// add filter to $my_post for extensibility
-		$my_post = apply_filters( 'qm_new_quiz_args', $my_post );
+		$my_post = apply_filters( 'quizmeister_new_quiz_args', $my_post );
 
 		// insert the post
 		$post_id = wp_insert_post( $my_post );
 
 		if ( $post_id ) {
 			//send mail notification
-			if ( get_option( 'qm_post_notification', 'yes' ) === 'yes' ) {
-				qm_notify_post_mail($post_id);
+			if ( get_option( 'quizmeister_post_notification', 'yes' ) === 'yes' ) {
+				quizmeister_notify_post_mail($post_id);
 			}
 
 			// delete old values
@@ -580,15 +578,15 @@ class QM_New_Quiz {
 				$base = '_qm-q-'.$i;
 				$question = &$questions[$i];
 				$res  = add_post_meta($post_id, $base.'-text', addslashes($question['text']), true);
-				if (isset($question['sub']))    $res = add_post_meta($post_id, $base.'-sub',    addslashes($question['sub']),    true); // optional
-				if (isset($question['explan'])) $res = add_post_meta($post_id, $base.'-explan', addslashes($question['explan']), true); // optional
-				if (isset($question['embed']))  $res = add_post_meta($post_id, $base.'-embed',  addslashes($question['embed']),  true); // optional
+				if (isset($question['sub']))    $res = add_post_meta($post_id, $base.'-sub',    wp_slash($question['sub']),    true); // optional
+				if (isset($question['explan'])) $res = add_post_meta($post_id, $base.'-explan', wp_slash($question['explan']), true); // optional
+				if (isset($question['embed']))  $res = add_post_meta($post_id, $base.'-embed',  wp_slash($question['embed']),  true); // optional
 				$res = add_post_meta($post_id, $base.'-anum',     count($question['answers']), true);
 				$res = add_post_meta($post_id, $base.'-rightans', $question['rightans'],       true);
 
 				for ($j = 0; $j < count($question['answers']); $j++) {
 					$basea = $base.'-a-'.$j;
-					$res = add_post_meta($post_id, $basea.'-text', addslashes($question['answers'][$j]['text']), true);
+					$res = add_post_meta($post_id, $basea.'-text', wp_slash($question['answers'][$j]['text']), true);
 				}
 			}
 
@@ -604,11 +602,11 @@ class QM_New_Quiz {
 			}
 
 			//plugin API to extend the functionality
-			do_action( 'qm_new_quiz_after_insert', $post_id );
+			do_action( 'quizmeister_new_quiz_after_insert', $post_id );
 
-			//echo '<div class="success">' . __('Post published successfully', 'qm') . '</div>';
+			//echo '<div class="success">' . __('Post published successfully', 'quizmeister') . '</div>';
 			if ( $post_id ) {
-				$redirect = apply_filters( 'qm_after_post_redirect', get_permalink( $post_id ), $post_id );
+				$redirect = apply_filters( 'quizmeister_after_post_redirect', get_permalink( $post_id ), $post_id );
 
 				wp_redirect( $redirect );
 				exit;
@@ -617,4 +615,4 @@ class QM_New_Quiz {
 	}
 }
 
-$qm_new_quiz_form = new QM_New_Quiz();
+$quizmeister_new_quiz_form = new QuizMeister_New_Quiz();

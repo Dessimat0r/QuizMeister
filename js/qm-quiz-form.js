@@ -1,7 +1,7 @@
 // translation strings are passed as text...
 /*global qfdata*/
 /*global jQuery*/
-/*global QM_Obj*/
+/*global QuizMeister_Obj*/
 var haspost = qfdata.haspost === 'true';
 var minq = parseInt(qfdata.minq, 10);
 var maxq = parseInt(qfdata.maxq, 10);
@@ -55,7 +55,7 @@ jQuery(document).ready(function ($) {
 		npform.find('input:hidden[name^="qm-q-"][name$="-numa"]').val(f_numapq);
 	}
 	checkBtnEnablement(npform);
-	QM_Obj.init();
+	QuizMeister_Obj.init();
 });
 
 function addExplanOnLi (li) {

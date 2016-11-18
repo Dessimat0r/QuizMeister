@@ -5,9 +5,9 @@
  * Bitcoin: 1JrHT9F96GjHYHHNFmBN2oRt79DDk5kzHq
  */
 
-class QMData {
+class QuizMeister_QuizData {
 	public $logged_in; // true if logged in, bool
-	public $frm_qm_q; // form version of qm_q contents, null or int
+	public $frm_quizmeister_q; // form version of quizmeister_q contents, null or int
 	public $num_q; // no. of questions, int
 	public $start_quiz; // true if quiz has been started (first question), bool
 	public $nonce; // null or str
@@ -53,15 +53,15 @@ class QMData {
 		//echo "<p>".print_r($_POST)."</p>";
 
 		$this->logged_in  = $user->exists();
-		$this->frm_qm_q   = isset($_POST['qm-q']) ? intval($_POST['qm-q']) : null;
+		$this->frm_quizmeister_q   = isset($_POST['qm-q']) ? intval($_POST['qm-q']) : null;
 		$this->num_q      = intval(get_post_meta($post_id, "_qm-qnum", true));
 		$this->start_quiz = isset($_POST['start-quiz']);
 		$this->nonce      = isset($_POST['qm-nonce']) ? $_POST['qm-nonce'] : null;
 		$this->upddb      = isset($_GET['upddb']) ? $_GET['upddb'] : null;
 
-		$this->has_q_form = $this->start_quiz || isset($this->frm_qm_q);
+		$this->has_q_form = $this->start_quiz || isset($this->frm_quizmeister_q);
 		if ($this->has_q_form) {
-			$this->last_q_index = $this->start_quiz ? null : $this->frm_qm_q;
+			$this->last_q_index = $this->start_quiz ? null : $this->frm_quizmeister_q;
 			// validate continue quiz nonce
 			if (!$this->start_quiz && (!isset($this->nonce) || !wp_verify_nonce($this->nonce, 'p'.$post_id.'_continue_quiz_q'.$this->last_q_index))) {
                 wp_die( __( 'Cheating?' ) );
@@ -169,9 +169,9 @@ class QMData {
 
 	function output_answer_form_head() {
 		?>
-		<form id="qm-quiz-form" name="qm-quiz-form" method="post" action="<?=get_permalink(get_the_ID());?>">
+		<form id="qm-quiz-form" name="qm-quiz-form" method="post" action="<?php echo get_permalink(get_the_ID());?>">
 			<?php wp_nonce_field('p'.$this->post_id.'_continue_quiz_q'.$this->q_index, 'qm-nonce'); ?>
-			<input type="hidden" id="qm-q" name="qm-q" value="<?=$this->q_index; ?>">
+			<input type="hidden" id="qm-q" name="qm-q" value="<?php echo $this->q_index; ?>">
 			<?php
 			for ($i = 0; $i < $this->q_index; $i++) {
 				echo

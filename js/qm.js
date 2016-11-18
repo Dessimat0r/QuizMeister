@@ -14,7 +14,7 @@ function isset(object) {
 	return (typeof object !== 'undefined');
 }
 
-var QM_Obj = {
+var QuizMeister_Obj = {
 	init: function() {
 		// init the featured image uploader and cat selector
 		this.featImgUploader();
@@ -90,13 +90,13 @@ var QM_Obj = {
 				data = {
 					'attach_id': el.data('id'),
 					'nonce'    : qm.nonce,
-					'action'   : 'qm_feat_img_del'
+					'action'   : 'quizmeister_feat_img_del'
 				}
 			;
 			$.post(qm.ajaxurl, data, function() {
 				el.parent().fadeOut('slow', function() {
 					$(this).remove();
-					$('#qm_featured_img').remove();
+					$('#quizmeister_featured_img').remove();
 					$('#qm-ft-upload-pickfiles').show();
 				});
 			});
@@ -123,7 +123,7 @@ var QM_Obj = {
 							width: 0
 						}, 'fast');
 				} else {
-					QM_Obj.getChildCats($(this),
+					QuizMeister_Obj.getChildCats($(this),
 						'cat-wrap-lvl-',
 						currentLevel + 1);
 				}
@@ -134,7 +134,7 @@ var QM_Obj = {
 	catSelector: function() {
 		jQuery(function($) {
 			$('.cat-ajax').each(function(index, el) {
-				QM_Obj.addCatSelectorEvent($(this))
+				QuizMeister_Obj.addCatSelectorEvent($(this))
 			});
 		});
 	},
@@ -146,15 +146,15 @@ var QM_Obj = {
 			taxonomy = typeof taxonomy !== 'undefined' ?
 				taxonomy : 'category';
 
-			if (QM_Obj.cat_req_ajax) {
-				QM_Obj.cat_req_ajax.abort();
-				QM_Obj.cat_req_ajax = null;
+			if (QuizMeister_Obj.cat_req_ajax) {
+				QuizMeister_Obj.cat_req_ajax.abort();
+				QuizMeister_Obj.cat_req_ajax = null;
 			}
-			QM_Obj.cat_req_ajax = $.ajax({
+			QuizMeister_Obj.cat_req_ajax = $.ajax({
 				type: 'post',
 				url: qm.ajaxurl,
 				data: {
-					action: 'qm_get_ajax_quiz_child_cats',
+					action: 'quizmeister_get_ajax_quiz_child_cats',
 					catID: cat,
 					nonce: qm.nonce
 				},
@@ -220,7 +220,7 @@ var QM_Obj = {
 								'">' + html +
 								'</span>'
 							);
-						QM_Obj.addCatSelectorEvent(
+						QuizMeister_Obj.addCatSelectorEvent(
 							$('#' +
 							results_div +
 							' .cat-ajax')

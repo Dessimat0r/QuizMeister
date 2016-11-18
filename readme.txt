@@ -22,7 +22,7 @@ Future versions will include bugfixes and feature enhancements.
 
 1. Upload the plugin files to the `/wp-content/plugins/quizmeister` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Create a page with [qm_new_quiz] on it
+3. Create a page with [quizmeister_new_quiz] on it
 4. Use the Settings->QuizMeister screen to configure the plugin, selecting the previously mentioned page as the 'New Quiz' page.
 5. Reference the 'New Quiz' page with the page permalink anywhere on your WordPress installation - on posts, via side links, header links, anywhere. Otherwise users won't know they can create quizzes.
 6. Install a plugin which allows users to create new accounts via their social media profiles (Facebook, Twitter, etc). WP-OAuth is good for this, and has been tested with this plugin.

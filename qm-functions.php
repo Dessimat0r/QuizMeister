@@ -7,25 +7,25 @@
 
 require_once 'qm-min-functions.php';
 
-add_action('init', 'qm_buffer_start');
+add_action('init', 'quizmeister_buffer_start');
 
 // Start output buffering, needed for redirecting to quiz after creation
-function qm_buffer_start() {
+function quizmeister_buffer_start() {
    ob_start();
 }
 
 // format and echo error messages
-function echo_qm_errors($error_msgs) {
+function quizmeister_echo_errors($error_msgs) {
 	?><ul id="qm-errors"><?php
 	foreach ($error_msgs as $value) {
-		?><li><?=$value;?></li><?php
+		?><li><?php echo $value;?></li><?php
 	}
 	unset($value);
 	?></ul><?php
 }
 
 // function to redirect after login
-function qm_auth_redirect_login() {
+function quizmeister_auth_redirect_login() {
 	$user = wp_get_current_user();
 	if ($user->ID !== 0) return;
 	nocache_headers();
@@ -34,7 +34,7 @@ function qm_auth_redirect_login() {
 }
 
 // Notify the admin about a new post
-function qm_notify_post_mail($post_id) {
+function quizmeister_notify_post_mail($post_id) {
 	$post = get_post($post_id);
 	$author_id = $post->post_author;
 	$sitename = get_bloginfo('name');
@@ -50,9 +50,9 @@ function qm_notify_post_mail($post_id) {
 	$msg .= sprintf( __( 'Edit Link: %s' ), admin_url( 'post.php?action=edit&post=' . $post_id ) ) . '\r\n';
 
 	//plugin api
-	$to      = apply_filters( 'qm_notify_to', $to );
-	$subject = apply_filters( 'qm_notify_subject', $subject );
-	$msg     = apply_filters( 'qm_notify_message', $msg );
+	$to      = apply_filters( 'quizmeister_notify_to', $to );
+	$subject = apply_filters( 'quizmeister_notify_subject', $subject );
+	$msg     = apply_filters( 'quizmeister_notify_message', $msg );
 
 	wp_mail( $to, $subject, $msg, $headers );
 }
@@ -64,7 +64,7 @@ function qm_notify_post_mail($post_id) {
  * @param string $field_name file input field name
  * @return bool|int attachment id on success, bool false instead
  */
-function qm_upload_file( $upload_data ) {
+function quizmeister_upload_file( $upload_data ) {
 	$uploaded_file = wp_handle_upload( $upload_data, array('test_form' => false) );
 
 	// If the wp_handle_upload call returned a local path for the image
@@ -92,33 +92,33 @@ function qm_upload_file( $upload_data ) {
 }
 
 // Checks the submitted files if they have any errors and returns error list
-function qm_check_feat_img_upload() {
-	$file_name = basename( $_FILES['qm_featured_img']['name'][0] );
+function quizmeister_check_feat_img_upload() {
+	$file_name = basename( $_FILES['quizmeister_featured_img']['name'][0] );
 
 	// check if file is uploaded
 	if (!$file_name) return null;
 
 	$errors     = array();
 	$mime       = get_allowed_mime_types();
-	$size_limit = intval(get_option( 'qm_attachment_max_size' ),10) * 1024;
-	$tmp_name  = basename( $_FILES['qm_featured_img']['tmp_name'][0] );
+	$size_limit = intval(get_option( 'quizmeister_attachment_max_size' ),10) * 1024;
+	$tmp_name  = basename( $_FILES['quizmeister_featured_img']['tmp_name'][0] );
 
 	$attach_type = wp_check_filetype( $file_name );
-	$attach_size = $_FILES['qm_featured_img']['size'][$i];
+	$attach_size = $_FILES['quizmeister_featured_img']['size'][$i];
 
 	// check file size
 	if ( $attach_size > $size_limit ) {
-		$errors[] = __( "Attachment is too big", 'qm' );
+		$errors[] = __( "Attachment is too big", 'quizmeister' );
 	}
 
 	// check file type
 	if ( !in_array( $attach_type['type'], $mime ) ) {
-		$errors[] = __( "Invalid attachment filetype", 'qm' );
+		$errors[] = __( "Invalid attachment filetype", 'quizmeister' );
 	}
 	return $errors;
 }
 
-function qm_get_cats() {
+function quizmeister_get_cats() {
 	$cats = get_categories( array('hide_empty' => false) );
 
 	$list = array();
@@ -134,7 +134,7 @@ function qm_get_cats() {
 }
 
 // Get lists of users from database
-function qm_list_users() {
+function quizmeister_list_users() {
 	global $wpdb;
 	$users = $wpdb->get_results( "SELECT ID, user_login from $wpdb->users" );
 	if (!$users) return null;
@@ -147,13 +147,13 @@ function qm_list_users() {
 }
 
 // Gets an array of the pages that contain the specified shortcode
-function qm_get_pages($shortcode = null) {
+function quizmeister_get_pages($shortcode = null) {
 	global $wpdb;
 	$pages = get_pages();
 	if (!$pages) return null;
 	$array = array();
 	foreach ($pages as $page) {
-		if (isset($shortcode) && !qm_has_shortcode($shortcode, $page->ID)) continue;
+		if (isset($shortcode) && !quizmeister_has_shortcode($shortcode, $page->ID)) continue;
 		$array[$page->ID] = $page->post_title;
 	}
 	unset($page);
@@ -167,34 +167,34 @@ function qm_get_pages($shortcode = null) {
  * @param int $attach_id attachment id
  * @return string
  */
-function qm_feat_img_html( $attach_id ) {
+function quizmeister_feat_img_html( $attach_id ) {
 	$image = wp_get_attachment_image_src( $attach_id, 'thumbnail' );
 	if ($image == '') return null;
 	$post = get_post( $attach_id );
 
 	$html =  sprintf( '<div class="qm-item" id="attachment-%d">', $attach_id );
 	$html .= sprintf( '<img src="%s" alt="%s" />', $image[0], esc_attr( $post->post_title ) );
-	$html .= sprintf( '<input type="button" class="qm-del-ft-image qm-small-button" data-id="%d" value="%s" />', $attach_id, __( 'Remove Image', 'qm' ) );
-	$html .= sprintf( '<input type="hidden" id="qm_featured_img" name="qm_featured_img" value="%d" />', $attach_id );
+	$html .= sprintf( '<input type="button" class="qm-del-ft-image qm-small-button" data-id="%d" value="%s" />', $attach_id, __( 'Remove Image', 'quizmeister' ) );
+	$html .= sprintf( '<input type="hidden" id="quizmeister_featured_img" name="quizmeister_featured_img" value="%d" />', $attach_id );
 	$html .= '</div>';
 
 	return $html;
 }
 
 // display msg if permalinks aren't setup correctly
-function qm_permalink_nag() {
+function quizmeister_permalink_nag() {
 	if ( current_user_can( 'manage_options' ) ) {
-		$msg = sprintf( __( 'You need to set your <a href="%1$s">permalink custom structure</a> to at least contain <b>/&#37;postname&#37;/</b> before QuizMeister will work correctly.', 'qm' ), 'options-permalink.php' );
+		$msg = sprintf( __( 'You need to set your <a href="%1$s">permalink custom structure</a> to at least contain <b>/&#37;postname&#37;/</b> before QuizMeister will work correctly.', 'quizmeister' ), 'options-permalink.php' );
 	}
 	echo '<div class="error fade"><p>'.$msg.'</p></div>';
 }
 
 //if not found %postname%, shows a error msg at admin panel
 if ( !stristr( get_option( 'permalink_structure' ), '%postname%' ) ) {
-	add_action( 'admin_notices', 'qm_permalink_nag', 3 );
+	add_action( 'admin_notices', 'quizmeister_permalink_nag', 3 );
 }
 
-function qm_get_image_sizes() {
+function quizmeister_get_image_sizes() {
 	$image_sizes_orig = get_intermediate_image_sizes();
 	$image_sizes_orig[] = 'full';
 	$image_sizes = array();
@@ -206,7 +206,7 @@ function qm_get_image_sizes() {
 	return $image_sizes;
 }
 
-function qm_has_shortcode( $shortcode = '', $post_id = null ) {
+function quizmeister_has_shortcode( $shortcode = '', $post_id = null ) {
 	if (!isset($shortcode)) return false;
 	$post_obj = isset($post_id) ? get_post($post_id) : get_post(get_the_ID());
 	if (!$post_obj) return false;
@@ -216,7 +216,7 @@ function qm_has_shortcode( $shortcode = '', $post_id = null ) {
 }
 
 // TODO: optimise this function
-function qm_get_cat_trail($catid) {
+function quizmeister_get_cat_trail($catid) {
 	$cats = array();
 	$first = true;
 	$cat_datas = array();
@@ -233,8 +233,8 @@ function qm_get_cat_trail($catid) {
 	 return $cat_datas;
 }
 
-function get_quiz_cats($parent_cat=0, $level=0) {
-	$exclude = get_option( 'qm_exclude_cats', '' );
+function quizmeister_get_quiz_cats($parent_cat=0, $level=0) {
+	$exclude = get_option( 'quizmeister_exclude_cats', '' );
 	$cats = get_categories(array(
 		'taxonomy'=>'category',
 		'parent'=>$parent_cat,
@@ -262,16 +262,16 @@ function get_quiz_cats($parent_cat=0, $level=0) {
 			'hierarchical'=>1,
 			'exclude'=>$exclude
 		));
-		$html .= '<option class="cat-lvl-'.$level.($cats ? ' has-child-cats' : '').'" value="'.$cat_assoc['cat_id'].'">'.get_spaces($level).$cat_assoc['name'].' ('.strval($cat_assoc['posts']).')</option>';
-		if ($cats) $html .= get_quiz_cats($cat_assoc['cat_id'], $level+1);
+		$html .= '<option class="cat-lvl-'.$level.($cats ? ' has-child-cats' : '').'" value="'.$cat_assoc['cat_id'].'">'.quizmeister_get_spaces($level).$cat_assoc['name'].' ('.strval($cat_assoc['posts']).')</option>';
+		if ($cats) $html .= quizmeister_get_quiz_cats($cat_assoc['cat_id'], $level+1);
 	}
 	if ($level <= 0) $html .= '</select>';
 	return $html;
 }
 
-function get_quiz_child_cats($parent_cat=0, $selected=null) {
-	$exclude = get_option( 'qm_exclude_cats', '');
-	$cat_type = get_option( 'qm_cat_type', 'dynamic' );
+function quizmeister_get_quiz_child_cats($parent_cat=0, $selected=null) {
+	$exclude = get_option( 'quizmeister_exclude_cats', '');
+	$cat_type = get_option( 'quizmeister_cat_type', 'dynamic' );
 	$cats = get_categories(array(
 		'taxonomy'=>'category',
 		'parent'=>$parent_cat,
@@ -311,19 +311,19 @@ function get_quiz_child_cats($parent_cat=0, $selected=null) {
 	return $html;
 }
 
-function qm_echo_cat_sels($selected = null) {
-	$cat_type = get_option( 'qm_cat_type', 'dynamic' );
+function quizmeister_echo_cat_sels($selected = null) {
+	$cat_type = get_option( 'quizmeister_cat_type', 'dynamic' );
 	$sel_valid = isset($selected) && is_numeric($selected) && ($selected = intval($selected)) > 0;
-	if ($sel_valid) $cat_datas = qm_get_cat_trail($selected);
+	if ($sel_valid) $cat_datas = quizmeister_get_cat_trail($selected);
 	?><span class="cat-wrap-all main-input"><span class="category-wrap"><?php
 	if (isset($cat_datas)) {
 		$first = true;
 		for ($i = 0; $i < count($cat_datas); $i++) {
 			if ($i > 0) echo ' <img class="qm-cat-arrow-img" src="' . plugins_url('/images/arrow-right.png', __FILE__) . '">';
-			?><span id="cat-wrap-lvl-<?=strval($i);?>" class="cat-ajax-wrap<?=$i < count($cat_datas)-1 ? ' has-child-cats' : '';?>" data-level="<?=strval($i);?>" style="display: inline-block;"><?php
-			echo get_quiz_child_cats($cat_datas[$i]->parent, $cat_datas[$i]->cat_ID);
+			?><span id="cat-wrap-lvl-<?php echo strval($i);?>" class="cat-ajax-wrap<?php echo $i < count($cat_datas)-1 ? ' has-child-cats' : '';?>" data-level="<?php echo strval($i);?>" style="display: inline-block;"><?php
+			echo quizmeister_get_quiz_child_cats($cat_datas[$i]->parent, $cat_datas[$i]->cat_ID);
 			if ($i >= count($cat_datas)-1) {
-				$html = get_quiz_child_cats($cat_datas[$i]->cat_ID);
+				$html = quizmeister_get_quiz_child_cats($cat_datas[$i]->cat_ID);
 				if (($html = trim($html)) !== '') {
 					echo ' <img class="qm-cat-arrow-img" src="' . plugins_url('/images/arrow-right.png', __FILE__) . '">';
 					echo $html;
@@ -333,11 +333,11 @@ function qm_echo_cat_sels($selected = null) {
 	} else {
 		if ($cat_type == 'dynamic') {
 			?><span id="cat-wrap-lvl-0" class="cat-ajax-wrap" style="display: inline-block;" data-level="0"><?php
-			echo get_quiz_child_cats();
+			echo quizmeister_get_quiz_child_cats();
 			?></span><?php
 		} else {
 			?><span id="cat-wrap" class="cat-wrap" style="display: inline-block;"><?php
-			echo get_quiz_cats();
+			echo quizmeister_get_quiz_cats();
 			?></span><?php
 		}?>
 	<?php
@@ -345,25 +345,25 @@ function qm_echo_cat_sels($selected = null) {
 	?></span><span class="cat-loading" style="display: inline-block;"></span></span><?php
 }
 
-function qm_cron_gallery_cleanup($cleanup = false) {
-	$orhpans_cleaned = -1;
-	if ($cleanup) $orhpans_cleaned = qm_gallery_cleanup();
-	$cleanup_mins = intval(get_option('qm_gallery_cleanup_mins', 240*60), 10);
-	$next_run = wp_next_scheduled('qm_evt_cron_gallery_cleanup', array(true));
+function quizmeister_cron_gallery_cleanup($cleanup = false) {
+	$orphans_cleaned = 0;
+	if ($cleanup) $orphans_cleaned = quizmeister_gallery_cleanup();
+	$cleanup_mins = intval(get_option('quizmeister_gallery_cleanup_mins', 240*60), 10);
+	$next_run = wp_next_scheduled('quizmeister_evt_cron_gallery_cleanup', array(true));
 	if ($next_run !== false) {
-		wp_clear_scheduled_hook('qm_evt_cron_gallery_cleanup', array(true));
-		remove_action('qm_evt_cron_gallery_cleanup', 'qm_cron_gallery_cleanup');
+		wp_clear_scheduled_hook('quizmeister_evt_cron_gallery_cleanup', array(true));
+		remove_action('quizmeister_evt_cron_gallery_cleanup', 'quizmeister_cron_gallery_cleanup');
 	}
 	if ($cleanup_mins > 0) {
 		$next_run = time()+($cleanup_mins*60);
 		// schedule next event
-		add_action('qm_evt_cron_gallery_cleanup', 'qm_cron_gallery_cleanup', 10, 2);
-		wp_schedule_single_event($next_run, 'qm_evt_cron_gallery_cleanup', array(true));
+		add_action('quizmeister_evt_cron_gallery_cleanup', 'quizmeister_cron_gallery_cleanup', 10, 2);
+		wp_schedule_single_event($next_run, 'quizmeister_evt_cron_gallery_cleanup', array(true));
 	}
-	return $orhpans_cleaned;
+	return $orphans_cleaned;
 }
 
-function get_qm_media_orphans(){
+function quizmeister_get_qm_media_orphans(){
 	// Setup array for storing objects
 	$quiz_images = array();
 
@@ -421,12 +421,13 @@ function get_qm_media_orphans(){
 }
 
 
-function qm_gallery_cleanup() {
-	$purged_count = intval(get_option('qm_purged_gallery_orphans_count', 0),10);
-	foreach (get_qm_media_orphans() as $orphan) {
+function quizmeister_gallery_cleanup() {
+    $this_purge_count = 0;
+	$purged_count = intval(get_option('quizmeister_purged_gallery_orphans_count', 0),10);
+	foreach (quizmeister_get_qm_media_orphans() as $orphan) {
 		wp_delete_post($orphan->ID, true);
-		$purged_count++;
+		$this_purge_count++;
 	}
-	update_option('qm_purged_gallery_orphans_count', $purged_count);
-	return $purged_count;
+	update_option('quizmeister_purged_gallery_orphans_count', $purged_count+$this_purge_count);
+	return $this_purge_count;
 }
