@@ -401,7 +401,7 @@ class QuizMeister_New_Quiz {
 		}
 
 		$title = sanitize_text_field(stripslashes($_POST['quizmeister_quiz_title']));
-		$description = wp_kses($_POST['quizmeister_quiz_description'], self::$allowed_desc_tags, array('http', 'https'));
+		$description = wp_kses(stripslashes($_POST['quizmeister_quiz_description']), self::$allowed_desc_tags, array('http', 'https'));
 		//$comments = $_POST['quizmeister_comments_enabled'];
 
 		/*
