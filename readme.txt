@@ -65,6 +65,9 @@ There is a gallery clean-up scheduled job that can be activated from the setting
 
 == Changelog ==
 
+- 1.0.1
+* Fixed some input/output sanitisation issues, changed class/function/filter names to not be 2 character, not calling Wordpress externally from PHP file, better jQuery in New Quiz form, other cleanups...
+
 = 1.0 =
 * Release version.
 
