@@ -3,7 +3,7 @@ Contributors: dessimat0r
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KXNX6FPVJ7KGG
 Tags: quizzes, quiz, user, social, game, facebook, twitter, questions, answers
 Requires at least: 3.0.1
-Tested up to: 3.7.6
+Tested up to: 4.6.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -65,7 +65,7 @@ There is a gallery clean-up scheduled job that can be activated from the setting
 
 == Changelog ==
 
-- 1.0.1
+= 1.0.1 =
 * Fixed some input/output sanitisation issues, changed class/function/filter names to not be 2 character, not calling Wordpress externally from PHP file, better jQuery in New Quiz form, other cleanups...
 
 = 1.0 =

@@ -9,7 +9,7 @@ QuizMeister
 
 **Requires at least:** 3.0.1
 
-**Tested up to:** 3.7.6
+**Tested up to:** 4.6.1
 
 **Stable tag:** trunk
 
